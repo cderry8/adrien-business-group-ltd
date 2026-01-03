@@ -18,7 +18,7 @@ export default function ProjectDetail() {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await axios.get(`https://adrien-business-group-ltd.onrender.com/projects/${id}`);
+        const res = await axios.get(`https://adrien-business-group-ltd.onrender.com/adrien/projects/${id}`);
         setProject(res.data);
       } catch (err) {
         console.error("Failed to fetch project:", err);
