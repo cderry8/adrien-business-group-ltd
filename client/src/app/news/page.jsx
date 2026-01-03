@@ -16,7 +16,7 @@ export default function NewsPage() {
 
   const fetchNews = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/adrien/news");
+      const res = await axios.get("https://adrien-business-group-ltd.onrender.com/adrien/news");
       setNews(res.data.sort((a, b) => new Date(b.date) - new Date(a.date)));
     } catch (err) {
       console.error("Failed to fetch news:", err);

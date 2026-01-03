@@ -14,7 +14,7 @@ export default function NewsDetailPage() {
 
   const fetchNewsById = async () => {
     try {
-      const res = await axios.get(`http://localhost:8000/adrien/news/${id}`);
+      const res = await axios.get(`https://adrien-business-group-ltd.onrender.com/adrien/news/${id}`);
       setNews(res.data);
     } catch (err) {
       console.error("Failed to fetch news:", err);

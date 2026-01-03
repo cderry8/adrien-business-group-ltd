@@ -150,7 +150,7 @@ export default function AdminProjects() {
       form.inProgressImages.forEach((file) => formData.append("inProgressImages", file));
       form.videos.forEach((file) => formData.append("videos", file));
 
-      await axios.post("http://localhost:8000/adrien/projects", formData);
+      await axios.post("https://adrien-business-group-ltd.onrender.com/adrien/projects", formData);
       setMessage({ type: "success", text: "Project created successfully!" });
       fetchProjects();
       setModalOpen(false);
@@ -190,7 +190,7 @@ export default function AdminProjects() {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:8000/adrien/projects");
+      const res = await axios.get("https://adrien-business-group-ltd.onrender.com/adrien/projects");
       setProjects(res.data);
     } catch (err) {
       console.error("Failed to fetch projects", err);
@@ -202,7 +202,7 @@ export default function AdminProjects() {
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this project?")) return;
     try {
-      await axios.delete(`http://localhost:8000/adrien/projects/${id}`);
+      await axios.delete(`https://adrien-business-group-ltd.onrender.com/adrien/projects/${id}`);
       setProjects((prev) => prev.filter((p) => p._id !== id));
     } catch (err) {
       console.error("Failed to delete project", err);

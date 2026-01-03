@@ -13,7 +13,7 @@ export default function FeaturedProjects() {
   // Fetch projects from API
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/adrien/projects");
+      const res = await axios.get("https://adrien-business-group-ltd.onrender.com/adrien/projects");
       // Sort by latest year and take 5 latest projects
       const sorted = res.data
         .sort((a, b) => new Date(b.year) - new Date(a.year))

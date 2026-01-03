@@ -34,7 +34,7 @@ export default function AdminNews() {
   const fetchNews = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:8000/adrien/news");
+      const res = await axios.get("https://adrien-business-group-ltd.onrender.com/adrien/news");
       setNewsList(res.data);
     } catch (err) {
       console.error("Failed to fetch news", err);
@@ -125,7 +125,7 @@ export default function AdminNews() {
       form.galleryImages.forEach((file) => formData.append("galleryImages", file));
       form.videos.forEach((file) => formData.append("videos", file));
 
-      await axios.post("http://localhost:8000/adrien/news", formData, {
+      await axios.post("https://adrien-business-group-ltd.onrender.com/adrien/news", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -155,7 +155,7 @@ export default function AdminNews() {
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this news item?")) return;
     try {
-      await axios.delete(`http://localhost:8000/adrien/news/${id}`);
+      await axios.delete(`https://adrien-business-group-ltd.onrender.com/adrien/news/${id}`);
       setNewsList((prev) => prev.filter((n) => n._id !== id));
     } catch (err) {
       console.error("Failed to delete news", err);

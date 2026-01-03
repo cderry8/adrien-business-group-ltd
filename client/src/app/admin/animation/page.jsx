@@ -23,7 +23,7 @@ const [creating, setCreating] = useState(false);
   // Fetch all walkthroughs
   const fetchWalkthroughs = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/adrien/walkthrough");
+      const res = await axios.get("https://adrien-business-group-ltd.onrender.com/adrien/walkthrough");
       setWalkthroughs(res.data);
     } catch (err) {
       console.error("Failed to fetch walkthroughs:", err);
@@ -51,7 +51,7 @@ const [creating, setCreating] = useState(false);
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this walkthrough?")) return;
     try {
-      await axios.delete(`http://localhost:8000/adrien/walkthrough/${id}`);
+      await axios.delete(`https://adrien-business-group-ltd.onrender.com/adrien/walkthrough/${id}`);
       setWalkthroughs((prev) => prev.filter((w) => w._id !== id));
     } catch (err) {
       console.error("Failed to delete walkthrough:", err);
@@ -74,7 +74,7 @@ const [creating, setCreating] = useState(false);
     if (newCover) formData.append("coverImage", newCover);
 
     const res = await axios.post(
-      "http://localhost:8000/adrien/walkthrough",
+      "https://adrien-business-group-ltd.onrender.com/adrien/walkthrough",
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );

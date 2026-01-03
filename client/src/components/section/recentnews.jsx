@@ -11,7 +11,7 @@ export default function RecentNews() {
     // Fetch latest 3 news
     const fetchNews = async () => {
         try {
-            const res = await axios.get("http://localhost:8000/adrien/news");
+            const res = await axios.get("https://adrien-business-group-ltd.onrender.com/adrien/news");
             const sortedNews = res.data.sort(
                 (a, b) => new Date(b.date) - new Date(a.date)
             );

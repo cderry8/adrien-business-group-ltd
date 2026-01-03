@@ -20,7 +20,7 @@ export default function ProjectsPage() {
 
     const fetchProjects = async () => {
         try {
-            const res = await axios.get("http://localhost:8000/adrien/projects");
+            const res = await axios.get("https://adrien-business-group-ltd.onrender.com/adrien/projects");
             setProjects(res.data.sort((a, b) => new Date(b.year) - new Date(a.year)));
         } catch (err) {
             console.error("Failed to fetch projects:", err);

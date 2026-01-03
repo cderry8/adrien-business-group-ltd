@@ -10,7 +10,7 @@ export default function WalkthroughsVideoGrid() {
   // Fetch latest 6 walkthroughs
   const fetchWalkthroughs = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/adrien/walkthrough");
+      const res = await axios.get("https://adrien-business-group-ltd.onrender.com/adrien/walkthrough");
       const latestSix = res.data
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 6);
