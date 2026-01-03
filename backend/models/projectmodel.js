@@ -19,23 +19,26 @@ const ProjectSchema = new mongoose.Schema(
     overview: String,
     designConcept: String,
 
-    // ✅ NEW: main image
-    mainImage: { type: String },
+    mainImage: String,
 
-    completedImages: [{ type: String }],
-    inProgressImages: [{ type: String }],
+    completedImages: [String],
+    inProgressImages: [String],
 
-    // ✅ videos now OPTIONAL
     videos: [
       {
-        url: { type: String },
+        url: String,
         caption: String,
       },
     ],
 
-    architects: [{ type: String, required: true }],
-    materials: [{ type: String }],
-    sustainability: [{ type: String }],
+    architects: {
+      type: [String],
+      required: true,
+      validate: v => v.length > 0,
+    },
+
+    materials: [String],
+    sustainability: [String],
   },
   { timestamps: true }
 );

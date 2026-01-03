@@ -11,6 +11,15 @@ const extractPublicId = (url) => {
   return filename.substring(0, filename.lastIndexOf("."));
 };
 
+const normalizeArray = (value) => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value.filter(Boolean);
+  return value
+    .split(",")
+    .map(v => v.trim())
+    .filter(Boolean);
+};
+
 /* ======================
    CREATE PROJECT
 ====================== */
@@ -27,10 +36,19 @@ export const createProject = async (req, res) => {
       overview,
       designConcept,
       style,
+      architects,
       materials,
       sustainability,
-      architects,
     } = req.body;
+
+    // 🔴 HARD VALIDATION
+    const normalizedArchitects = normalizeArray(architects);
+    if (!name) {
+      return res.status(400).json({ message: "Project name is required" });
+    }
+    if (normalizedArchitects.length === 0) {
+      return res.status(400).json({ message: "At least one architect is required" });
+    }
 
     const project = new Project({
       name,
@@ -44,7 +62,6 @@ export const createProject = async (req, res) => {
       designConcept,
       style,
 
-      // Files (all optional)
       mainImage: req.files?.mainImage?.[0]?.path || null,
       completedImages: req.files?.completedImages?.map(f => f.path) || [],
       inProgressImages: req.files?.inProgressImages?.map(f => f.path) || [],
@@ -54,17 +71,18 @@ export const createProject = async (req, res) => {
           caption: "",
         })) || [],
 
-      // Arrays
-      architects: Array.isArray(architects) ? architects : [architects],
-      materials: materials?.split(",").map(m => m.trim()) || [],
-      sustainability: sustainability?.split(",").map(s => s.trim()) || [],
+      architects: normalizedArchitects,
+      materials: normalizeArray(materials),
+      sustainability: normalizeArray(sustainability),
     });
 
     await project.save();
     res.status(201).json(project);
+
   } catch (error) {
-    console.error("CREATE PROJECT ERROR:", error);
-    res.status(500).json({ message: "Failed to create project" });
+    console.error("CREATE PROJECT ERROR MESSAGE:", error.message);
+    console.error("CREATE PROJECT ERROR STACK:", error.stack);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -76,8 +94,8 @@ export const getProjects = async (req, res) => {
     const projects = await Project.find().sort({ createdAt: -1 });
     res.status(200).json(projects);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to fetch projects" });
+    console.error("GET PROJECTS ERROR:", error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -92,8 +110,8 @@ export const getProject = async (req, res) => {
     }
     res.status(200).json(project);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to fetch project" });
+    console.error("GET PROJECT ERROR:", error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -107,12 +125,10 @@ export const updateProject = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    // Replace main image if provided
     if (req.files?.mainImage?.[0]) {
       project.mainImage = req.files.mainImage[0].path;
     }
 
-    // Append new uploads
     if (req.files?.completedImages) {
       project.completedImages.push(
         ...req.files.completedImages.map(f => f.path)
@@ -134,7 +150,6 @@ export const updateProject = async (req, res) => {
       );
     }
 
-    // Update scalar fields
     const fields = [
       "name",
       "type",
@@ -154,30 +169,29 @@ export const updateProject = async (req, res) => {
       }
     });
 
-    // Update arrays
+    if (req.body.architects) {
+      const normalizedArchitects = normalizeArray(req.body.architects);
+      if (normalizedArchitects.length === 0) {
+        return res.status(400).json({ message: "Architects cannot be empty" });
+      }
+      project.architects = normalizedArchitects;
+    }
+
     if (req.body.materials) {
-      project.materials = req.body.materials
-        .split(",")
-        .map(m => m.trim());
+      project.materials = normalizeArray(req.body.materials);
     }
 
     if (req.body.sustainability) {
-      project.sustainability = req.body.sustainability
-        .split(",")
-        .map(s => s.trim());
-    }
-
-    if (req.body.architects) {
-      project.architects = Array.isArray(req.body.architects)
-        ? req.body.architects
-        : [req.body.architects];
+      project.sustainability = normalizeArray(req.body.sustainability);
     }
 
     await project.save();
     res.status(200).json({ message: "Project updated", project });
+
   } catch (error) {
-    console.error("UPDATE PROJECT ERROR:", error);
-    res.status(500).json({ message: "Failed to update project" });
+    console.error("UPDATE PROJECT ERROR MESSAGE:", error.message);
+    console.error("UPDATE PROJECT ERROR STACK:", error.stack);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -191,7 +205,6 @@ export const deleteProject = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    // Delete images
     const images = [
       project.mainImage,
       ...project.completedImages,
@@ -205,7 +218,6 @@ export const deleteProject = async (req, res) => {
       }
     }
 
-    // Delete videos
     for (const vid of project.videos) {
       const publicId = extractPublicId(vid.url);
       if (publicId) {
@@ -218,8 +230,10 @@ export const deleteProject = async (req, res) => {
 
     await project.deleteOne();
     res.status(200).json({ message: "Project deleted successfully" });
+
   } catch (error) {
-    console.error("DELETE PROJECT ERROR:", error);
-    res.status(500).json({ message: "Failed to delete project" });
+    console.error("DELETE PROJECT ERROR MESSAGE:", error.message);
+    console.error("DELETE PROJECT ERROR STACK:", error.stack);
+    res.status(500).json({ message: error.message });
   }
 };

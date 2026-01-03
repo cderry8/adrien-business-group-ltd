@@ -11,9 +11,6 @@ import { upload } from "../middleware/uploadmiddleware.js";
 
 const router = express.Router();
 
-/* ======================
-   CREATE PROJECT
-====================== */
 router.post(
   "/",
   upload.fields([
@@ -25,9 +22,6 @@ router.post(
   createProject
 );
 
-/* ======================
-   UPDATE PROJECT
-====================== */
 router.put(
   "/:id",
   upload.fields([
@@ -39,15 +33,8 @@ router.put(
   updateProject
 );
 
-/* ======================
-   READ
-====================== */
 router.get("/", getProjects);
 router.get("/:id", getProject);
-
-/* ======================
-   DELETE
-====================== */
 router.delete("/:id", deleteProject);
 
 export default router;
