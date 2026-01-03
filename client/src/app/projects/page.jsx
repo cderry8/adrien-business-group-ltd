@@ -54,7 +54,7 @@ export default function ProjectsPage() {
     
 
     return (
-        <div className="bg-white pb-20 min-h-screen flex flex-col">
+        <div className="bg-white min-h-screen flex flex-col">
             <Navbar />
 
             <main className="pt-[150px] flex-1">

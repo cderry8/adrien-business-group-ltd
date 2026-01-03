@@ -51,7 +51,7 @@ const About = () => {
 
 
     return (
-        <div className="bg-white pb-20" >
+        <div className="bg-white" >
             <Navbar />
             <div className="min-h-screen pt-[150px]  px-4">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

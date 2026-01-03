@@ -25,10 +25,10 @@ export default function ContactPage() {
 
     try {
       await send(
-        "YOUR_SERVICE_ID", // replace with your EmailJS service ID
-        "YOUR_TEMPLATE_ID", // replace with your EmailJS template ID
+        "service_uqztmaj", // replace with your EmailJS service ID
+        "template_3cs4qrm", // replace with your EmailJS template ID
         form,
-        "YOUR_PUBLIC_KEY" // replace with your EmailJS public key
+        "NynwdPUsUgbrIajXY" // replace with your EmailJS public key
       );
 
       setSubmitted(true);
@@ -42,7 +42,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="bg-white pb-20 min-h-screen flex flex-col">
+    <div className="bg-white min-h-screen flex flex-col">
       <Navbar />
 
       <main className="flex-1 pt-[150px]">

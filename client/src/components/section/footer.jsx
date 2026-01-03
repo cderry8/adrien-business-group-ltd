@@ -1,3 +1,6 @@
+import { FaInstagram, FaYoutube, FaEnvelope } from 'react-icons/fa';
+import { MdLocationOn } from 'react-icons/md';
+
 export default function Footer() {
   return (
     <footer className="bg-black text-[#9a9a9a] py-24">
@@ -17,11 +20,28 @@ export default function Footer() {
 
             {/* SOCIAL ICONS */}
             <div className="flex items-center gap-5 pt-6 text-lg text-gray-400">
-              <span className="cursor-pointer hover:text-white transition">f</span>
-              <span className="cursor-pointer hover:text-white transition">◎</span>
-              <span className="cursor-pointer hover:text-white transition">⦿</span>
-              <span className="cursor-pointer hover:text-white transition">▶</span>
-              <span className="cursor-pointer hover:text-white transition">in</span>
+              <a
+                href="https://www.instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cursor-pointer hover:text-white transition"
+              >
+                <FaInstagram />
+              </a>
+              <a
+                href="https://www.youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cursor-pointer hover:text-white transition"
+              >
+                <FaYoutube />
+              </a>
+              <a
+                href="mailto:info@wall-corp.com"
+                className="cursor-pointer hover:text-white transition"
+              >
+                <FaEnvelope />
+              </a>
             </div>
           </div>
 
@@ -29,55 +49,32 @@ export default function Footer() {
           <div className="space-y-12 text-sm leading-relaxed">
             <div>
               <p className="text-gray-400 mb-1">RWANDA</p>
-              <p>Gisozi, District of Gasabo, Kigali</p>
+              <p>FJXP+RGW, 4 A, Musanze</p>
             </div>
-
-            <div>
-              <p className="text-gray-400 mb-1">KENYA</p>
-              <p>Landvale, No:30, Westlands</p>
-              <p>Rd, Nairobi</p>
-            </div>
+           
           </div>
 
           {/* RIGHT COLUMN – CONTACT FORM */}
           <div className="space-y-10">
-            <h4 className="text-sm tracking-[0.25em] uppercase text-gray-400">
-              Contact us:
-            </h4>
+            
 
-            <form className="grid grid-cols-2 gap-4 text-sm">
-              <input
-                type="text"
-                placeholder="Name"
-                className="bg-transparent border border-gray-600 px-4 py-3 focus:outline-none focus:border-gray-400"
-              />
-
-              <textarea
-                placeholder="Message"
-                className="row-span-3 bg-transparent border border-gray-600 px-4 py-3 resize-none focus:outline-none focus:border-gray-400"
-              />
-
-              <input
-                type="email"
-                placeholder="E-mail *"
-                className="bg-transparent border border-gray-600 px-4 py-3 focus:outline-none focus:border-gray-400"
-              />
-
-              <input
-                type="text"
-                placeholder="Subject"
-                className="bg-transparent border border-gray-600 px-4 py-3 focus:outline-none focus:border-gray-400"
-              />
-
-              <div className="col-span-2 flex justify-end pt-4">
-                <button
-                  type="submit"
-                  className="bg-[#b29b85] text-black px-6 py-2 text-sm tracking-wide hover:bg-[#c7b39e] transition"
+            {/* Map with Location */}
+            <div className="pt-10">
+              <h4 className="text-sm tracking-[0.25em] uppercase text-gray-400">
+                Our Location:
+              </h4>
+              <div className="pt-4">
+                <a
+                  href="https://www.google.com/maps?q=FJXP+RGW,4+A,Musanze"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-lg text-gray-400 flex items-center gap-2 hover:text-white"
                 >
-                  Send
-                </button>
+                  <MdLocationOn />
+                  <span>View on Map</span>
+                </a>
               </div>
-            </form>
+            </div>
           </div>
 
         </div>
@@ -85,4 +82,3 @@ export default function Footer() {
     </footer>
   );
 }
-    
