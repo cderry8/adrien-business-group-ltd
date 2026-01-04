@@ -5,7 +5,7 @@ export default function HeroVideo() {
       {/* FIXED Background video */}
       <video
         className="fixed inset-0 h-full w-full object-cover -z-10"
-        src="/kigali.webm"
+        src="https://adrien.b-cdn.net/kigali.webm"
         autoPlay
         loop
         muted

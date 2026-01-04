@@ -124,7 +124,7 @@ const About = () => {
                 <p>{service.description}</p>
                 <p className="mt-4">{service.extra}</p>
 
-               
+
               </motion.div>
             );
           })}
@@ -140,7 +140,7 @@ const About = () => {
         viewport={{ once: true, amount: 0.3 }}
       >
         <motion.h2 variants={fadeUp} className="text-4xl text-black font-bold mb-6">
-          WALL Corporation
+          ADRIEN BUSINESS GROUP LTD
         </motion.h2>
 
         <motion.p
@@ -157,10 +157,10 @@ const About = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {[
-            ["37", "Different Types of Project Design"],
-            ["150+", "Projects"],
-            ["17", "Countries & 36 Cities"],
-            ["91", "International Design Awards"],
+            ["14", "Different Types of Project Design"],
+            ["60+", "Projects"],
+            ["1", "Countries & 3 Cities"],
+
           ].map(([num, label], i) => (
             <motion.div key={i} variants={scaleIn} className="bg-white p-6">
               <p className="text-4xl text-black font-bold">{num}</p>
@@ -190,7 +190,7 @@ const About = () => {
           <motion.div variants={fadeRight}>
             <p className="uppercase tracking-[0.3em] text-black text-sm mb-8">Founder</p>
             <p className="text-gray-700 mb-8">
-              Selim Senin graduated in 2010 from Yildiz Technical University and
+              ADRIEN graduated in 2010 from Yildiz Technical University and
               holds a master’s degree in Architecture History.
             </p>
             <p className="text-gray-700">
@@ -201,7 +201,7 @@ const About = () => {
       </motion.section>
 
       {/* CLIENTS */}
-      <motion.section
+      {/* <motion.section
         className="py-24"
         variants={container}
         initial="hidden"
@@ -230,7 +230,7 @@ const About = () => {
             </motion.div>
           ))}
         </motion.div>
-      </motion.section>
+      </motion.section> */}
 
       <Footer />
     </div>
