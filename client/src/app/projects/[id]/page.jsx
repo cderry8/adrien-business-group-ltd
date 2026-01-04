@@ -14,7 +14,6 @@ export default function ProjectDetail() {
   const { id } = useParams(); // get project ID from URL
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeImage, setActiveImage] = useState < string | null > (null);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -69,35 +68,25 @@ export default function ProjectDetail() {
 
       <main className="max-w-7xl mx-auto px-6 py-24 space-y-32">
         {/* PROJECT OVERVIEW */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-  {/* LEFT CONTENT */}
-  <div className="lg:col-span-2 space-y-6">
-    <h2 className="text-2xl font-semibold text-black">
-      Project Overview
-    </h2>
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-16">
+          <div className="md:col-span-2 space-y-6">
+            <h2 className="text-2xl text-black font-semibold mb-6">Project Overview</h2>
+            <p className="text-gray-700 leading-7">{project.overview}</p>
+            <p className="text-gray-700 leading-7">{project.designConcept}</p>
+          </div>
 
-    <p className="text-gray-700 leading-relaxed max-w-prose">
-      {project.overview}
-    </p>
+          <div className="border-l pl-8 space-y-4 text-sm">
+            <Info label="Location" value={project.location} />
+            <Info label="Year" value={project.year} />
+            <Info label="Area" value={project.area} />
+            <Info label="Client" value={project.client} />
+            <Info label="Style" value={project.style} />
+            <Info label="Status" value={project.status} />
+            <Info label="Team" value={project.architects?.join(", ")} />
+          </div>
+        </section>
 
-    <p className="text-gray-700 leading-relaxed max-w-prose">
-      {project.designConcept}
-    </p>
-  </div>
-
-  {/* RIGHT INFO PANEL */}
-  <div className="lg:border-l border-t lg:border-t-0 pt-6 lg:pt-0 lg:pl-8 space-y-5">
-    <Info label="Location" value={project.location} />
-    <Info label="Year" value={project.year} />
-    <Info label="Area" value={project.area} />
-    <Info label="Client" value={project.client} />
-    <Info label="Style" value={project.style} />
-    <Info label="Status" value={project.status} />
-    <Info label="Team" value={project.architects?.join(", ")} />
-  </div>
-</section>
-
-
+        {/* COMPLETED IMAGES */}
         {project.completedImages?.length > 0 && (
           <section>
             <h2 className="text-2xl text-black font-semibold mb-10">Completed Project Gallery</h2>
@@ -112,21 +101,7 @@ export default function ProjectDetail() {
               {project.completedImages.map((src, index) => (
                 <SwiperSlide key={index}>
                   <div className="relative h-[400px] w-full overflow-hidden rounded-lg shadow-lg">
-                    <div
-                      onClick={() => setActiveImage(src)}
-                      className="group relative h-[400px] w-full cursor-pointer overflow-hidden rounded-2xl shadow-xl"
-                    >
-                      <Image
-                        src={src}
-                        alt={`Completed ${index + 1}`}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-
-                      {/* subtle overlay on hover */}
-                      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-
+                    <Image src={src} alt={`Completed ${index + 1}`} fill className="object-cover" />
                   </div>
                 </SwiperSlide>
               ))}
@@ -149,21 +124,7 @@ export default function ProjectDetail() {
               {project.inProgressImages.map((src, index) => (
                 <SwiperSlide key={index}>
                   <div className="relative h-[400px] w-full overflow-hidden rounded-lg shadow-lg">
-                    <div
-                      onClick={() => setActiveImage(src)}
-                      className="group relative h-[400px] w-full cursor-pointer overflow-hidden rounded-2xl shadow-xl"
-                    >
-                      <Image
-                        src={src}
-                        alt={`Completed ${index + 1}`}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-
-                      {/* subtle overlay on hover */}
-                      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-
+                    <Image src={src} alt={`In-progress ${index + 1}`} fill className="object-cover" />
                   </div>
                 </SwiperSlide>
               ))}
@@ -189,36 +150,17 @@ export default function ProjectDetail() {
         )}
 
         {/* MATERIALS & SUSTAINABILITY */}
-        
-        {activeImage && (
-          <div
-            onClick={() => setActiveImage(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-6xl h-[90vh] px-4"
-            >
-              <button
-                onClick={() => setActiveImage(null)}
-                className="absolute -top-12 right-4 text-white text-4xl font-light hover:opacity-70"
-              >
-                ×
-              </button>
-
-              <div className="relative w-full h-full overflow-hidden rounded-3xl shadow-2xl">
-                <Image
-                  src={activeImage}
-                  alt="Fullscreen view"
-                  fill
-                  className="object-contain bg-black"
-                  priority
-                />
-              </div>
-            </div>
+        <section>
+          <h2 className="text-2xl text-black font-semibold mb-6">Materials & Sustainability</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-gray-700">
+            {project.materials?.map((mat, i) => (
+              <p key={i}>{mat}</p>
+            ))}
+            {project.sustainability?.map((sust, i) => (
+              <p key={i}>{sust}</p>
+            ))}
           </div>
-        )}
-
+        </section>
       </main>
 
       <Footer />
