@@ -14,6 +14,8 @@ export default function ProjectDetail() {
   const { id } = useParams(); // get project ID from URL
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [fullscreenImage, setFullscreenImage] = useState(null);
+
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -28,6 +30,18 @@ export default function ProjectDetail() {
     };
     fetchProject();
   }, [id]);
+
+  useEffect(() => {
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      setFullscreenImage(null);
+    }
+  };
+
+  window.addEventListener("keydown", handleKeyDown);
+  return () => window.removeEventListener("keydown", handleKeyDown);
+}, []);
+
 
   if (loading) {
     return (
@@ -68,23 +82,28 @@ export default function ProjectDetail() {
 
       <main className="max-w-7xl mx-auto px-6 py-24 space-y-32">
         {/* PROJECT OVERVIEW */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-16">
-          <div className="md:col-span-2 space-y-6">
-            <h2 className="text-2xl text-black font-semibold mb-6">Project Overview</h2>
-            <p className="text-gray-700 leading-7">{project.overview}</p>
-            <p className="text-gray-700 leading-7">{project.designConcept}</p>
-          </div>
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
+  {/* Left column: Overview & Design Concept */}
+  <div className="md:col-span-2 space-y-6">
+    <h2 className="text-2xl md:text-3xl text-black font-semibold mb-4 md:mb-6">
+      Project Overview
+    </h2>
+    <p className="text-gray-700 leading-7 break-words">{project.overview}</p>
+    <p className="text-gray-700 leading-7 break-words">{project.designConcept}</p>
+  </div>
 
-          <div className="border-l pl-8 space-y-4 text-sm">
-            <Info label="Location" value={project.location} />
-            <Info label="Year" value={project.year} />
-            <Info label="Area" value={project.area} />
-            <Info label="Client" value={project.client} />
-            <Info label="Style" value={project.style} />
-            <Info label="Status" value={project.status} />
-            <Info label="Team" value={project.architects?.join(", ")} />
-          </div>
-        </section>
+  {/* Right column: Info */}
+  <div className="border-t md:border-t-0 md:border-l md:pl-8 pt-6 md:pt-0 space-y-4 text-sm">
+    <Info label="Location" value={project.location} />
+    <Info label="Year" value={project.year} />
+    <Info label="Area" value={project.area} />
+    <Info label="Client" value={project.client} />
+    <Info label="Style" value={project.style} />
+    <Info label="Status" value={project.status} />
+    <Info label="Team" value={project.architects?.join(", ")} />
+  </div>
+</section>
+
 
         {/* COMPLETED IMAGES */}
         {project.completedImages?.length > 0 && (
@@ -100,9 +119,18 @@ export default function ProjectDetail() {
             >
               {project.completedImages.map((src, index) => (
                 <SwiperSlide key={index}>
-                  <div className="relative h-[400px] w-full overflow-hidden rounded-lg shadow-lg">
-                    <Image src={src} alt={`Completed ${index + 1}`} fill className="object-cover" />
-                  </div>
+                  <div
+  className="relative h-[400px] w-full overflow-hidden rounded-lg shadow-lg cursor-pointer"
+  onClick={() => setFullscreenImage(src)}
+>
+  <Image
+    src={src}
+    alt={`Completed ${index + 1}`}
+    fill
+    className="object-cover"
+  />
+</div>
+
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -123,9 +151,18 @@ export default function ProjectDetail() {
             >
               {project.inProgressImages.map((src, index) => (
                 <SwiperSlide key={index}>
-                  <div className="relative h-[400px] w-full overflow-hidden rounded-lg shadow-lg">
-                    <Image src={src} alt={`In-progress ${index + 1}`} fill className="object-cover" />
-                  </div>
+                  <div
+  className="relative h-[400px] w-full overflow-hidden rounded-lg shadow-lg cursor-pointer"
+  onClick={() => setFullscreenImage(src)}
+>
+  <Image
+    src={src}
+    alt={`Completed ${index + 1}`}
+    fill
+    className="object-cover"
+  />
+</div>
+
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -162,6 +199,35 @@ export default function ProjectDetail() {
           </div>
         </section>
       </main>
+      {fullscreenImage && (
+  <div
+    className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
+    onClick={() => setFullscreenImage(null)}
+  >
+    {/* Close button */}
+    <button
+      className="absolute top-6 right-6 text-white text-3xl font-light"
+      onClick={() => setFullscreenImage(null)}
+    >
+      ✕
+    </button>
+
+    {/* Image */}
+    <div
+      className="relative w-full h-full max-w-6xl max-h-[90vh] px-6"
+      onClick={(e) => e.stopPropagation()} // prevents closing when clicking image
+    >
+      <Image
+        src={fullscreenImage}
+        alt="Fullscreen view"
+        fill
+        className="object-contain"
+        priority
+      />
+    </div>
+  </div>
+)}
+
 
       <Footer />
     </div>
