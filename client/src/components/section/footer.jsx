@@ -15,7 +15,7 @@ export default function Footer() {
 
             <div className="text-sm">
               <p className="text-gray-400 mb-1">Email:</p>
-              <p>info@wall-corp.com</p>
+              <p>adrienbusinessgroupltd@gmail.com</p>
             </div>
 
             {/* SOCIAL ICONS */}

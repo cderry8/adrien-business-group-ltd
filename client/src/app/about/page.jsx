@@ -147,27 +147,33 @@ const About = () => {
           variants={fadeUp}
           className="text-xl text-gray-700 mb-12 max-w-3xl mx-auto"
         >
-          Kigali and Nairobi based architecture office WALL Corporation was founded
-          by architect Selim Senin in 2010. WALL continues to work on various projects
-          across Africa and beyond, receiving more than 91 international awards.
+          Adrien business group was found in 2015 by ADRIEN, ADRIEN BG continues to work on various projects across this country, And receiving more project to work on because we are the first company to deal with your dream of your housing
         </motion.p>
 
         <motion.div
-          variants={container}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-        >
-          {[
-            ["14", "Different Types of Project Design"],
-            ["60+", "Projects"],
-            ["1", "Countries & 3 Cities"],
+  variants={container}
+  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+>
+  {[
+    ["14", "Different Types of Project Design"],
+    ["60+", "Projects"],
+    ["1", "Countries & 3 Cities"],
+  ].map(([num, label], i) => (
+    <motion.div
+      key={i}
+      variants={scaleIn}
+      className="flex flex-col justify-center rounded-2xl bg-white p-8 text-center shadow-sm"
+    >
+      <p className="text-4xl font-bold text-black">
+        {num}
+      </p>
+      <p className="mt-2 text-base text-gray-600 leading-snug">
+        {label}
+      </p>
+    </motion.div>
+  ))}
+</motion.div>
 
-          ].map(([num, label], i) => (
-            <motion.div key={i} variants={scaleIn} className="bg-white p-6">
-              <p className="text-4xl text-black font-bold">{num}</p>
-              <p className="text-lg text-gray-600">{label}</p>
-            </motion.div>
-          ))}
-        </motion.div>
       </motion.section>
 
       {/* FOUNDER */}
@@ -180,7 +186,7 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16">
           <motion.div variants={fadeLeft}>
             <Image
-              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d"
+              src="/adrien.jpeg"
               alt="Founder"
               width={500}
               height={400}
