@@ -60,21 +60,23 @@ export default function Footer() {
 
             {/* Map with Location */}
             <div className="pt-10">
-              <h4 className="text-sm tracking-[0.25em] uppercase text-gray-400">
-                Our Location:
-              </h4>
-              <div className="pt-4">
-                <a
-                  href="https://www.google.com/maps?q=FJXP+RGW,4+A,Musanze"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-lg text-gray-400 flex items-center gap-2 hover:text-white"
-                >
-                  <MdLocationOn />
-                  <span>View on Map</span>
-                </a>
-              </div>
-            </div>
+  <h4 className="text-sm tracking-[0.25em] uppercase text-gray-400">
+    Our Location:
+  </h4>
+
+  <div className="pt-4">
+    <div className="w-full h-56 rounded-xl overflow-hidden border border-white/10">
+      <iframe
+        title="Our location"
+        src="https://www.google.com/maps?q=FJXP+RGW,4+A,Musanze&output=embed"
+        className="w-full h-full"
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+      />
+    </div>
+  </div>
+</div>
+
           </div>
 
         </div>

@@ -196,12 +196,9 @@ const About = () => {
           <motion.div variants={fadeRight}>
             <p className="uppercase tracking-[0.3em] text-black text-sm mb-8">Founder</p>
             <p className="text-gray-700 mb-8">
-              ADRIEN graduated in 2010 from Yildiz Technical University and
-              holds a master’s degree in Architecture History.
+            Am "ADRIEN " and am the CEO of ADRIEN BG, This company was found in 2015 where by it started as a small company and now it is a big company, To achieve this was been supported by my client though making there dreams came true , in  construction apartment, this company will continue to give you sweat, clean, and clear project that you 've been dreaming..
             </p>
-            <p className="text-gray-700">
-              His approach to architecture is to constantly discover the new.
-            </p>
+          
           </motion.div>
         </div>
       </motion.section>

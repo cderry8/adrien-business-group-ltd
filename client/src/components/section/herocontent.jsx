@@ -46,8 +46,8 @@ export default function HeroContent() {
             variants={fadeLeft}
           >
             <p className="max-w-md text-lg leading-relaxed tracking-wide text-gray-900 mb-6">
-              14 years, we have been designing unique structures for better cities
-              and a more aesthetic life around the world.
+              11 years, we have been designing unique structures for better cities
+              and a more aesthetic life around our Country.
             </p>
             <p className="max-w-md text-lg leading-relaxed tracking-wide text-gray-900">
               We design original and unique structures in every field, from house
