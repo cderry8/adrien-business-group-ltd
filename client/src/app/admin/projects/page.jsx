@@ -12,8 +12,54 @@ export default function AdminProjects() {
   const [mainImagePreview, setMainImagePreview] = useState(null);
   const router = useRouter();
 
+  const [editingId, setEditingId] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(null);
+
+  const LIMITS = {
+    maxMainImageCount: 1,
+    maxCompletedImagesCount: 10,
+    maxInProgressImagesCount: 10,
+    maxVideosCount: 5,
+    maxImageBytes: 10 * 1024 * 1024,
+    maxVideoBytes: 200 * 1024 * 1024,
+  };
+
+  const handleEdit = (project) => {
+    setEditingId(project._id);
+    setMessage(null);
+
+    setForm({
+      name: project.name || "",
+      type: project.type || "",
+      location: project.location || "",
+      year: project.year || "",
+      area: project.area || "",
+      client: project.client || "",
+      status: project.status || "Draft",
+      style: project.style || "",
+      overview: project.overview || "",
+      designConcept: project.designConcept || "",
+      materials: Array.isArray(project.materials) ? project.materials.join(", ") : project.materials || "",
+      sustainability: Array.isArray(project.sustainability) ? project.sustainability.join(", ") : project.sustainability || "",
+      architects: Array.isArray(project.architects) && project.architects.length > 0
+        ? project.architects.map((name) => ({ name, role: "", image: "" }))
+        : [{ name: "", role: "", image: "" }],
+      mainImage: null,
+      completedImages: [],
+      inProgressImages: [],
+      videos: [],
+    });
+
+    setMainImagePreview(project.mainImage || null);
+    setImagePreviews({
+      completedImages: project.completedImages || [],
+      inProgressImages: project.inProgressImages || [],
+    });
+    setVideoPreviews((project.videos || []).map((v) => v.url).filter(Boolean));
+    setModalOpen(true);
+  };
+
   const [form, setForm] = useState({
-    title: "",
     name: "",
     type: "",
     location: "",
@@ -65,6 +111,16 @@ export default function AdminProjects() {
   const handleMainImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (file.size > LIMITS.maxImageBytes) {
+      setMessage({
+        type: "error",
+        text: `Main image is too large. Max ${(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB.`,
+      });
+      e.target.value = "";
+      return;
+    }
+
     setForm((prev) => ({ ...prev, mainImage: file }));
     setMainImagePreview(URL.createObjectURL(file));
   };
@@ -84,11 +140,51 @@ export default function AdminProjects() {
 
   const handleImageChange = (e, type) => {
     const files = Array.from(e.target.files);
-    setForm((prev) => ({ ...prev, [type]: [...prev[type], ...files] }));
+
+    const maxCount =
+      type === "completedImages"
+        ? LIMITS.maxCompletedImagesCount
+        : LIMITS.maxInProgressImagesCount;
+    const remaining = Math.max(0, maxCount - form[type].length);
+    if (remaining === 0) {
+      setMessage({
+        type: "error",
+        text:
+          type === "completedImages"
+            ? `You already selected the maximum of ${LIMITS.maxCompletedImagesCount} completed images.`
+            : `You already selected the maximum of ${LIMITS.maxInProgressImagesCount} in-progress images.`,
+      });
+      e.target.value = "";
+      return;
+    }
+
+    const selected = files.slice(0, remaining);
+    const oversized = selected.find((f) => f.size > LIMITS.maxImageBytes);
+    if (oversized) {
+      setMessage({
+        type: "error",
+        text: `One of the selected images is too large. Max ${(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB per image.`,
+      });
+      e.target.value = "";
+      return;
+    }
+
+    if (selected.length < files.length) {
+      setMessage({
+        type: "error",
+        text:
+          type === "completedImages"
+            ? `Only ${remaining} completed images can be added (max ${LIMITS.maxCompletedImagesCount}).`
+            : `Only ${remaining} in-progress images can be added (max ${LIMITS.maxInProgressImagesCount}).`,
+      });
+    }
+
+    setForm((prev) => ({ ...prev, [type]: [...prev[type], ...selected] }));
     setImagePreviews((prev) => ({
       ...prev,
-      [type]: [...prev[type], ...files.map((file) => URL.createObjectURL(file))],
+      [type]: [...prev[type], ...selected.map((file) => URL.createObjectURL(file))],
     }));
+    e.target.value = "";
   };
 
   const removeImage = (type, index) => {
@@ -102,8 +198,38 @@ export default function AdminProjects() {
 
   const handleVideoChange = (e) => {
     const files = Array.from(e.target.files);
-    setForm((prev) => ({ ...prev, videos: [...prev.videos, ...files] }));
-    setVideoPreviews((prev) => [...prev, ...files.map((file) => URL.createObjectURL(file))]);
+
+    const remaining = Math.max(0, LIMITS.maxVideosCount - form.videos.length);
+    if (remaining === 0) {
+      setMessage({
+        type: "error",
+        text: `You already selected the maximum of ${LIMITS.maxVideosCount} videos.`,
+      });
+      e.target.value = "";
+      return;
+    }
+
+    const selected = files.slice(0, remaining);
+    const oversized = selected.find((f) => f.size > LIMITS.maxVideoBytes);
+    if (oversized) {
+      setMessage({
+        type: "error",
+        text: `One of the selected videos is too large. Max ${(LIMITS.maxVideoBytes / (1024 * 1024)).toFixed(0)}MB per video.`,
+      });
+      e.target.value = "";
+      return;
+    }
+
+    if (selected.length < files.length) {
+      setMessage({
+        type: "error",
+        text: `Only ${remaining} videos can be added (max ${LIMITS.maxVideosCount}).`,
+      });
+    }
+
+    setForm((prev) => ({ ...prev, videos: [...prev.videos, ...selected] }));
+    setVideoPreviews((prev) => [...prev, ...selected.map((file) => URL.createObjectURL(file))]);
+    e.target.value = "";
   };
 
   const removeVideo = (index) => {
@@ -121,12 +247,12 @@ export default function AdminProjects() {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
+    setUploadProgress(0);
 
     try {
       const formData = new FormData();
 
       // Text fields
-      formData.append("title", form.title);
       formData.append("name", form.name);
       formData.append("type", form.type);
       formData.append("location", form.location);
@@ -150,12 +276,42 @@ export default function AdminProjects() {
       form.inProgressImages.forEach((file) => formData.append("inProgressImages", file));
       form.videos.forEach((file) => formData.append("videos", file));
 
-      await axios.post("https://adrien-business-group-ltd.onrender.com/adrien/projects", formData);
-      setMessage({ type: "success", text: "Project created successfully!" });
+      if (editingId) {
+        await axios.put(
+          `https://adrien-business-group-ltd.onrender.com/adrien/projects/${editingId}`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            maxBodyLength: Infinity,
+            maxContentLength: Infinity,
+            timeout: 10 * 60 * 1000,
+            onUploadProgress: (e) => {
+              if (!e.total) return;
+              setUploadProgress(Math.round((e.loaded * 100) / e.total));
+            },
+          }
+        );
+      } else {
+        await axios.post("https://adrien-business-group-ltd.onrender.com/adrien/projects", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+          timeout: 10 * 60 * 1000,
+          onUploadProgress: (e) => {
+            if (!e.total) return;
+            setUploadProgress(Math.round((e.loaded * 100) / e.total));
+          },
+        });
+      }
+
+      setMessage({
+        type: "success",
+        text: editingId ? "Project updated successfully!" : "Project created successfully!",
+      });
       fetchProjects();
       setModalOpen(false);
+      setEditingId(null);
       setForm({
-        title: "",
         name: "",
         type: "",
         location: "",
@@ -182,6 +338,7 @@ export default function AdminProjects() {
       setMessage({ type: "error", text: err.response?.data?.message || "Upload failed" });
     } finally {
       setLoading(false);
+      setUploadProgress(null);
     }
   };
 
@@ -219,9 +376,8 @@ export default function AdminProjects() {
   const filteredProjects = projects
   .filter((project) => {
     const name = project.name?.toLowerCase() || "";
-    const title = project.title?.toLowerCase() || "";
     const term = searchTerm.toLowerCase();
-    return name.includes(term) || title.includes(term);
+    return name.includes(term);
   })
   .sort((a, b) => {
     if (sortKey === "year") {
@@ -319,13 +475,22 @@ export default function AdminProjects() {
                 <div key={project._id} className="bg-white rounded-xl shadow mb-8 p-6">
                   <div className="flex justify-between items-start mb-4">
                     <h2 className="text-2xl text-black font-semibold">{project.name}</h2>
-                    <button
-                      onClick={() => handleDelete(project._id)}
-                      className="text-red-500 hover:text-red-700"
-                      title="Delete Project"
-                    >
-                      <FiTrash2 size={20} />
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => handleEdit(project)}
+                        className="text-gray-700 hover:text-gray-900"
+                        title="Edit Project"
+                      >
+                        <FiEdit2 size={20} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(project._id)}
+                        className="text-red-500 hover:text-red-700"
+                        title="Delete Project"
+                      >
+                        <FiTrash2 size={20} />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 text-black md:grid-cols-2 gap-6 mb-4">
@@ -425,7 +590,7 @@ export default function AdminProjects() {
                             <FiX size={24} />
                         </button>
 
-                        <h2 className="text-2xl font-semibold mb-6 text-black">Create Project</h2>
+                        <h2 className="text-2xl font-semibold mb-6 text-black">{editingId ? "Edit Project" : "Create Project"}</h2>
                         {message && (
                             <div
                                 className={`mb-4 p-3 rounded ${message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
@@ -436,15 +601,6 @@ export default function AdminProjects() {
 
                         <form className="space-y-6" onSubmit={handleSubmit} encType="multipart/form-data">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <input
-                                    type="text"
-                                    name="title"
-                                    placeholder="Project Title"
-                                    value={form.title}
-                                    onChange={handleInputChange}
-                                    className="border px-4 py-2 rounded text-black w-full"
-                                    required
-                                />
                                 <input
                                     type="text"
                                     name="name"
@@ -501,6 +657,7 @@ export default function AdminProjects() {
                                     onChange={handleInputChange}
                                     className="border px-4 py-2 rounded text-black w-full"
                                 >
+                                    <option value="Draft">Draft</option>
                                     <option value="In Progress">In Progress</option>
                                     <option value="Completed">Completed</option>
                                 </select>
@@ -584,6 +741,9 @@ export default function AdminProjects() {
                             </button>
 
                             <label className="block mb-2 font-medium">Main Image</label>
+                            <p className="text-xs text-gray-500 mb-2">
+                                Max {LIMITS.maxMainImageCount} image, up to {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB.
+                            </p>
 
                             <input
                                 type="file"
@@ -614,6 +774,9 @@ export default function AdminProjects() {
 
                             <div>
                                 <label className="text-black font-medium">Completed Images</label>
+                                <p className="text-xs text-gray-500 mb-2">
+                                    Max {LIMITS.maxCompletedImagesCount} images, up to {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB each.
+                                </p>
                                 <input
                                     type="file"
                                     name="completedImages"
@@ -640,6 +803,9 @@ export default function AdminProjects() {
 
                             <div>
                                 <label className="text-black font-medium">In Progress Images</label>
+                                <p className="text-xs text-gray-500 mb-2">
+                                    Max {LIMITS.maxInProgressImagesCount} images, up to {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB each.
+                                </p>
                                 <input
                                     type="file"
                                     name="inProgressImages"
@@ -666,6 +832,9 @@ export default function AdminProjects() {
 
                             <div>
                                 <label className="text-black font-medium">Videos</label>
+                                <p className="text-xs text-gray-500 mb-2">
+                                    Max {LIMITS.maxVideosCount} videos, up to {(LIMITS.maxVideoBytes / (1024 * 1024)).toFixed(0)}MB each.
+                                </p>
                                 <input
                                     type="file"
                                     name="videos"
@@ -694,8 +863,23 @@ export default function AdminProjects() {
                                 type="submit"
                                 className="bg-gray-900 cursor-pointer text-white px-6 py-3 rounded hover:bg-gray-800 transition"
                             >
-                                {loading ? "Creating..." : "Create Project"}
+                                {loading ? "Saving..." : editingId ? "Update Project" : "Create Project"}
                             </button>
+
+                            {loading && uploadProgress !== null && (
+                              <div className="mt-4">
+                                <div className="flex justify-between text-xs text-gray-600 mb-1">
+                                  <span>Uploading...</span>
+                                  <span>{uploadProgress}%</span>
+                                </div>
+                                <div className="w-full h-2 bg-gray-200 rounded">
+                                  <div
+                                    className="h-2 bg-gray-900 rounded transition-all"
+                                    style={{ width: `${uploadProgress}%` }}
+                                  />
+                                </div>
+                              </div>
+                            )}
                         </form>
                     </div>
                 </div>

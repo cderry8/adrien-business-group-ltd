@@ -47,14 +47,14 @@ export default function ProjectDetail() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="w-12 h-12 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4"></div>
-        <p className="text-gray-600">Loading project...</p>
+        <p className="text-gray-700">Loading project...</p>
       </div>
     );
   }
 
   if (!project) {
     return (
-      <p className="text-center py-20 text-gray-500">Project not found.</p>
+      <p className="text-center py-20 text-gray-700">Project not found.</p>
     );
   }
 
@@ -179,7 +179,7 @@ export default function ProjectDetail() {
                   <div className="aspect-video w-full bg-black rounded-lg overflow-hidden">
                     <video src={video.url} controls className="w-full h-full object-cover" />
                   </div>
-                  <p className="text-sm text-gray-600">{video.caption || "Video"}</p>
+                  <p className="text-sm text-gray-700">{video.caption || "Video"}</p>
                 </div>
               ))}
             </div>

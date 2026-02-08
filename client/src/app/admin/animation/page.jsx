@@ -12,6 +12,13 @@ export default function WalkthroughsPage() {
   const [loading, setLoading] = useState(true);
 const [creating, setCreating] = useState(false);
     const router = useRouter();
+  const [editingId, setEditingId] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(null);
+
+  const LIMITS = {
+    maxCoverBytes: 10 * 1024 * 1024,
+    maxVideoBytes: 200 * 1024 * 1024,
+  };
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
@@ -66,20 +73,58 @@ const [creating, setCreating] = useState(false);
     return;
   }
 
+  if (newVideo && newVideo.size > LIMITS.maxVideoBytes) {
+    alert(`Video is too large. Max ${(LIMITS.maxVideoBytes / (1024 * 1024)).toFixed(0)}MB.`);
+    return;
+  }
+  if (newCover && newCover.size > LIMITS.maxCoverBytes) {
+    alert(`Cover image is too large. Max ${(LIMITS.maxCoverBytes / (1024 * 1024)).toFixed(0)}MB.`);
+    return;
+  }
+
   setCreating(true); // start loading
+  setUploadProgress(0);
   try {
     const formData = new FormData();
     formData.append("projectName", newProjectName);
-    formData.append("video", newVideo);
+    if (newVideo) formData.append("video", newVideo);
     if (newCover) formData.append("coverImage", newCover);
 
-    const res = await axios.post(
-      "https://adrien-business-group-ltd.onrender.com/adrien/walkthrough",
-      formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
+    if (editingId) {
+      const res = await axios.put(
+        `https://adrien-business-group-ltd.onrender.com/adrien/walkthrough/${editingId}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+          timeout: 10 * 60 * 1000,
+          onUploadProgress: (e) => {
+            if (!e.total) return;
+            setUploadProgress(Math.round((e.loaded * 100) / e.total));
+          },
+        }
+      );
+      setWalkthroughs((prev) => prev.map((w) => (w._id === editingId ? res.data : w)));
+      setEditingId(null);
+    } else {
+      const res = await axios.post(
+        "https://adrien-business-group-ltd.onrender.com/adrien/walkthrough",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          maxBodyLength: Infinity,
+          maxContentLength: Infinity,
+          timeout: 10 * 60 * 1000,
+          onUploadProgress: (e) => {
+            if (!e.total) return;
+            setUploadProgress(Math.round((e.loaded * 100) / e.total));
+          },
+        }
+      );
+      setWalkthroughs((prev) => [res.data, ...prev]);
+    }
 
-    setWalkthroughs((prev) => [res.data, ...prev]);
     setNewProjectName("");
     setNewVideo(null);
     setNewCover(null);
@@ -87,8 +132,17 @@ const [creating, setCreating] = useState(false);
     console.error("Failed to create walkthrough:", err);
   } finally {
     setCreating(false); // end loading
+    setUploadProgress(null);
   }
 };
+
+  const handleEdit = (walk) => {
+    setEditingId(walk._id);
+    setNewProjectName(walk.projectName || "");
+    setNewVideo(null);
+    setNewCover(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -123,6 +177,9 @@ const [creating, setCreating] = useState(false);
             {/* Video Upload */}
             <div className="flex flex-col">
               <label htmlFor="videoUpload" className="mb-1 font-medium text-gray-700">Walkthrough Video</label>
+              <p className="text-xs text-gray-500 mb-1">
+                Max {(LIMITS.maxVideoBytes / (1024 * 1024)).toFixed(0)}MB.
+              </p>
               <input
                 id="videoUpload"
                 type="file"
@@ -135,6 +192,9 @@ const [creating, setCreating] = useState(false);
             {/* Cover Image Upload */}
             <div className="flex flex-col">
               <label htmlFor="coverUpload" className="mb-1 font-medium text-gray-700">Cover Image (Optional)</label>
+              <p className="text-xs text-gray-500 mb-1">
+                Max {(LIMITS.maxCoverBytes / (1024 * 1024)).toFixed(0)}MB.
+              </p>
               <input
                 id="coverUpload"
                 type="file"
@@ -173,9 +233,24 @@ const [creating, setCreating] = useState(false);
         ></path>
       </svg>
     )}
-    {creating ? "Creating..." : "Create Walkthrough"}
+    {creating ? "Saving..." : editingId ? "Update Walkthrough" : "Create Walkthrough"}
   </button>
 </div>
+
+{creating && uploadProgress !== null && (
+  <div className="col-span-1 md:col-span-3 mt-4">
+    <div className="flex justify-between text-xs text-gray-600 mb-1">
+      <span>Uploading...</span>
+      <span>{uploadProgress}%</span>
+    </div>
+    <div className="w-full h-2 bg-gray-200 rounded">
+      <div
+        className="h-2 bg-gray-900 rounded transition-all"
+        style={{ width: `${uploadProgress}%` }}
+      />
+    </div>
+  </div>
+)}
 
           </form>
         </section>
@@ -184,10 +259,10 @@ const [creating, setCreating] = useState(false);
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-12 h-12 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-600">Loading walkthroughs...</p>
+            <p className="text-gray-700">Loading walkthroughs...</p>
           </div>
         ) : walkthroughs.length === 0 ? (
-          <p className="text-center text-gray-500 py-20">No walkthroughs found.</p>
+          <p className="text-center text-gray-700 py-20">No walkthroughs found.</p>
         ) : (
           <>
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -208,8 +283,8 @@ const [creating, setCreating] = useState(false);
 
                   <div className="p-4">
                     <h3 className="font-semibold text-lg">{walk.projectName}</h3>
-                    <p className="text-gray-500 text-sm mt-1">Uploaded by {walk.createdBy}</p>
-                    <p className="text-gray-400 text-xs mt-1">{new Date(walk.createdAt).toLocaleDateString()}</p>
+                    <p className="text-gray-700 text-sm mt-1">Uploaded by {walk.createdBy}</p>
+                    <p className="text-gray-600 text-xs mt-1">{new Date(walk.createdAt).toLocaleDateString()}</p>
 
                     <div className="flex justify-between mt-4">
                       <a
@@ -218,12 +293,20 @@ const [creating, setCreating] = useState(false);
                       >
                         View
                       </a>
-                      <button
-                        onClick={() => handleDelete(walk._id)}
-                        className="text-red-500 hover:underline text-sm"
-                      >
-                        Delete
-                      </button>
+                      <div className="flex gap-4">
+                        <button
+                          onClick={() => handleEdit(walk)}
+                          className="text-gray-700 hover:underline text-sm"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(walk._id)}
+                          className="text-red-500 hover:underline text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

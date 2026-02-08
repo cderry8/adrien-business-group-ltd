@@ -114,7 +114,7 @@ const About = () => {
               <motion.div
                 key={index}
                 variants={fadeUp}
-                className="bg-black/20 backdrop-blur-md text-[#7a7a7a] p-8 rounded-lg flex flex-col"
+                className="bg-black/20 backdrop-blur-md text-gray-800 p-8 rounded-lg flex flex-col"
               >
                 <div className="flex items-center mb-4">
                   <Icon className="w-6 h-6" />
@@ -167,7 +167,7 @@ const About = () => {
       <p className="text-4xl font-bold text-black">
         {num}
       </p>
-      <p className="mt-2 text-base text-gray-600 leading-snug">
+      <p className="mt-2 text-base text-gray-700 leading-snug">
         {label}
       </p>
     </motion.div>

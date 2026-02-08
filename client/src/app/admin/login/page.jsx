@@ -47,7 +47,7 @@ export default function AdminLogin() {
         <h1 className="text-center text-2xl font-semibold text-gray-800 mb-2">
           Admin Dashboard
         </h1>
-        <p className="text-center text-sm text-gray-500 mb-4">
+        <p className="text-center text-sm text-gray-700 mb-4">
           Sign in to manage content
         </p>
 
@@ -99,7 +99,7 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        <p className="text-center text-xs text-gray-400 mt-6">
+        <p className="text-center text-xs text-gray-600 mt-6">
           © {new Date().getFullYear()} Adrien Business Group
         </p>
       </div>

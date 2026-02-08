@@ -46,7 +46,7 @@ export default function AdminNavbar() {
                   className={`text-sm font-medium transition ${
                     isActive
                       ? "text-gray-900 border-b-2 border-gray-900 pb-1"
-                      : "text-gray-500 hover:text-gray-900"
+                      : "text-gray-700 hover:text-gray-900"
                   }`}
                 >
                   {link.name}
@@ -94,7 +94,7 @@ export default function AdminNavbar() {
                 className={`text-sm font-medium ${
                   isActive
                     ? "text-gray-900"
-                    : "text-gray-500 hover:text-gray-900"
+                    : "text-gray-700 hover:text-gray-900"
                 }`}
               >
                 {link.name}

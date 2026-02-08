@@ -14,9 +14,6 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Adrien Business Group",
   description: "A Company Specialized in building houses",
-    icons: {
-    icon: "/logoo.png",
-  },
 };
 
 export default function RootLayout({ children }) {

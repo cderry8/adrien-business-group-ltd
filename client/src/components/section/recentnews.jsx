@@ -31,7 +31,7 @@ export default function RecentNews() {
         return (
             <section className="py-16 bg-white">
                 <div className="container mx-auto text-center">
-                    <p className="text-gray-600">Loading recent news...</p>
+                    <p className="text-gray-700">Loading recent news...</p>
                 </div>
             </section>
         );
@@ -40,7 +40,7 @@ export default function RecentNews() {
     return (
         <section className="py-16 bg-white px-10">
             <div className="container mx-auto text-center">
-                <h2 className="text-xl tracking-[0.4em] uppercase text-black/60 mb-10">
+                <h2 className="text-xl tracking-[0.4em] uppercase text-gray-800 mb-10">
                     RECENT NEWS
                 </h2>
 
@@ -58,7 +58,7 @@ export default function RecentNews() {
                                 {item.title}
                             </p>
 
-                            <p className="text-gray-600 mt-4">
+                            <p className="text-gray-700 mt-4">
                                 {new Date(item.date).getFullYear()}
                             </p>
 

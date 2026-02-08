@@ -83,10 +83,10 @@ export default function ProjectsPage() {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20">
                         <div className="w-12 h-12 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4"></div>
-                        <p className="text-gray-600">Loading projects...</p>
+                        <p className="text-gray-700">Loading projects...</p>
                     </div>
                 ) : filteredProjects.length === 0 ? (
-                    <p className="text-center text-gray-500 py-20">No projects found.</p>
+                    <p className="text-center text-gray-700 py-20">No projects found.</p>
                 ) : (
                     <>
                         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 px-4 gap-4">
@@ -155,7 +155,7 @@ function ProjectCard({ project, onClick }) {
 
             <div className="bg-white py-6 text-center">
                 <h3 className="text-[18px] font-normal text-black">{project.name || project.title}</h3>
-                <p className="mt-1 text-[14px] text-[#7a7a7a]">{project.location || "Unknown"}</p>
+                <p className="mt-1 text-[14px] text-gray-700">{project.location || "Unknown"}</p>
             </div>
         </div>
     );

@@ -31,7 +31,7 @@ export default function NewsDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <div className="w-12 h-12 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4"></div>
-        <p className="text-gray-600">Loading news...</p>
+        <p className="text-gray-700">Loading news...</p>
       </div>
     );
   }
@@ -39,7 +39,7 @@ export default function NewsDetailPage() {
   if (!news) {
     return (
       <div className="text-center py-20">
-        <p className="text-gray-500">News article not found.</p>
+        <p className="text-gray-700">News article not found.</p>
       </div>
     );
   }
@@ -96,10 +96,9 @@ export default function NewsDetailPage() {
           <section>
             <h2 className="text-2xl font-semibold mb-10">Videos</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {news.videos.map((video, index) => (
+              {news.videos.map((videoUrl, index) => (
                 <div key={index} className="aspect-video w-full bg-black rounded-lg overflow-hidden">
-                  <video src={video.url} controls className="w-full h-full object-cover" />
-                  {video.caption && <p className="text-sm mt-2">{video.caption}</p>}
+                  <video src={videoUrl} controls className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>

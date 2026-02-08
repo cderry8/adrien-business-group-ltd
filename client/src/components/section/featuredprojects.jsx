@@ -38,17 +38,17 @@ export default function FeaturedProjects() {
     <section className="w-full bg-white py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         {/* Section title */}
-        <h2 className="mb-24 text-xs tracking-[0.4em] uppercase text-black/60 text-center">
+        <h2 className="mb-24 text-xs tracking-[0.4em] uppercase text-gray-800 text-center">
           Featured Projects
         </h2>
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-12 h-12 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-600">Loading projects...</p>
+            <p className="text-gray-700">Loading projects...</p>
           </div>
         ) : projects.length === 0 ? (
-          <p className="text-center text-gray-500 py-20">
+          <p className="text-center text-gray-700 py-20">
             No featured projects found.
           </p>
         ) : (
@@ -70,7 +70,7 @@ export default function FeaturedProjects() {
 
                 {/* Text */}
                 <div className="flex flex-col justify-center text-center lg:text-left">
-                  <span className="mb-6 text-sm tracking-widest uppercase text-black/60">
+                  <span className="mb-6 text-sm tracking-widest uppercase text-gray-700">
                     {project.location || "Unknown"}
                   </span>
 
@@ -78,7 +78,7 @@ export default function FeaturedProjects() {
                     {project.name || project.title}
                   </h3>
 
-                  <p className="mb-12 text-sm text-black/60">
+                  <p className="mb-12 text-sm text-gray-700">
                     {project.overview || project.subtitle || ""}
                   </p>
 

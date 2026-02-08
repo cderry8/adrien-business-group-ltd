@@ -47,17 +47,17 @@ export default function NewsPage() {
       <Navbar />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-12 py-32 flex-1">
-        <h1 className="mb-32 text-xs tracking-[0.4em] uppercase text-black/60">
+        <h1 className="mb-32 text-xs tracking-[0.4em] uppercase text-gray-800">
           News
         </h1>
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="w-12 h-12 border-4 border-gray-200 border-t-gray-900 rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-600">Loading news articles...</p>
+            <p className="text-gray-700">Loading news articles...</p>
           </div>
         ) : news.length === 0 ? (
-          <p className="text-center text-gray-500 py-20">No news articles found.</p>
+          <p className="text-center text-gray-700 py-20">No news articles found.</p>
         ) : (
           <>
             {/* FEATURED NEWS (only on first page) */}
@@ -76,7 +76,7 @@ export default function NewsPage() {
                 </div>
 
                 <div className="flex flex-col justify-center">
-                  <span className="mb-6 text-sm uppercase tracking-widest text-black/50">
+                  <span className="mb-6 text-sm uppercase tracking-widest text-gray-700">
                     {new Date(paginatedNews[0].date).toLocaleDateString("en-US", {
                       month: "long",
                       year: "numeric",
@@ -87,11 +87,11 @@ export default function NewsPage() {
                     {paginatedNews[0].title}
                   </h2>
 
-                  <p className="mb-12 max-w-md text-black/60 leading-relaxed">
+                  <p className="mb-12 max-w-md text-gray-700 leading-relaxed">
                     {paginatedNews[0].shortDescription}
                   </p>
 
-                  <span className="text-sm text-black/40 cursor-pointer">
+                  <span className="text-sm text-gray-700 cursor-pointer">
                     Read article
                   </span>
                 </div>
@@ -116,7 +116,7 @@ export default function NewsPage() {
                   </div>
 
                   <div>
-                    <span className="mb-4 block text-sm uppercase tracking-widest text-black/50">
+                    <span className="mb-4 block text-sm uppercase tracking-widest text-gray-700">
                       {new Date(item.date).toLocaleDateString("en-US", {
                         month: "long",
                         year: "numeric",
@@ -127,7 +127,7 @@ export default function NewsPage() {
                       {item.title}
                     </h3>
 
-                    <p className="max-w-md text-black/60 leading-relaxed">
+                    <p className="max-w-md text-gray-700 leading-relaxed">
                       {item.shortDescription}
                     </p>
 
