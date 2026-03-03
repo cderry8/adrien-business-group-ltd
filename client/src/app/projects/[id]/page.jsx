@@ -32,15 +32,15 @@ export default function ProjectDetail() {
   }, [id]);
 
   useEffect(() => {
-  const handleKeyDown = (e) => {
-    if (e.key === "Escape") {
-      setFullscreenImage(null);
-    }
-  };
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setFullscreenImage(null);
+      }
+    };
 
-  window.addEventListener("keydown", handleKeyDown);
-  return () => window.removeEventListener("keydown", handleKeyDown);
-}, []);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
 
   if (loading) {
@@ -73,42 +73,78 @@ export default function ProjectDetail() {
         />
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute bottom-16 left-1/2 -translate-x-1/2 text-center text-white max-w-4xl px-6">
-          <h1 className="text-4xl md:text-5xl font-semibold mb-4">
+          <p className="tracking-[0.3em] text-sm uppercase text-white/90">
+            {project.type || "Project"}
+          </p>
+          <h1 className="mt-4 text-4xl md:text-5xl font-semibold tracking-tight">
             {project.name}
           </h1>
-          <p className="tracking-[0.3em] text-sm uppercase">{project.type}</p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-white/90">
+            {project.location && <span>{project.location}</span>}
+            {project.year && <span>{project.year}</span>}
+            {project.status && <span>{project.status}</span>}
+          </div>
         </div>
       </section>
 
-      <main className="max-w-7xl mx-auto px-6 py-24 space-y-32">
-        {/* PROJECT OVERVIEW */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
-  {/* Left column: Overview & Design Concept */}
-  <div className="md:col-span-2 space-y-6">
-    <h2 className="text-2xl md:text-3xl text-black font-semibold mb-4 md:mb-6">
-      Project Overview
-    </h2>
-    <p className="text-gray-700 leading-7 break-words">{project.overview}</p>
-    <p className="text-gray-700 leading-7 break-words">{project.designConcept}</p>
-  </div>
+      <main className="max-w-7xl mx-auto px-6 py-20 space-y-20">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16">
+          <div className="lg:col-span-2 space-y-6">
+            <div>
+              <h2 className="text-2xl md:text-3xl text-black font-semibold tracking-tight">
+                Project Overview
+              </h2>
+              <p className="mt-4 text-gray-700 leading-7 break-words">
+                {project.overview || ""}
+              </p>
+              {project.designConcept && (
+                <p className="mt-4 text-gray-700 leading-7 break-words">
+                  {project.designConcept}
+                </p>
+              )}
+            </div>
 
-  {/* Right column: Info */}
-  <div className="border-t md:border-t-0 md:border-l md:pl-8 pt-6 md:pt-0 space-y-4 text-sm">
-    <Info label="Location" value={project.location} />
-    <Info label="Year" value={project.year} />
-    <Info label="Area" value={project.area} />
-    <Info label="Client" value={project.client} />
-    <Info label="Style" value={project.style} />
-    <Info label="Status" value={project.status} />
-    <Info label="Team" value={project.architects?.join(", ")} />
-  </div>
-</section>
+            {Array.isArray(project.architects) && project.architects.length > 0 && (
+              <div className="rounded-2xl border border-gray-200 bg-white p-6">
+                <h3 className="text-sm font-semibold text-gray-900">Team</h3>
+                <p className="mt-2 text-gray-700">
+                  {project.architects.join(", ")}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <aside className="lg:col-span-1">
+            <div className="rounded-2xl border border-gray-200 bg-white p-6">
+              <h3 className="text-sm font-semibold text-gray-900">Project Info</h3>
+              <div className="mt-5 space-y-4 text-sm">
+                <Info label="Location" value={project.location} />
+                <Info label="Year" value={project.year} />
+                <Info label="Area" value={project.area} />
+                <Info label="Client" value={project.client} />
+                <Info label="Style" value={project.style} />
+                <Info label="Status" value={project.status} />
+                <Info
+                  label="Materials"
+                  value={Array.isArray(project.materials) ? project.materials.join(", ") : project.materials}
+                />
+                <Info
+                  label="Sustainability"
+                  value={Array.isArray(project.sustainability) ? project.sustainability.join(", ") : project.sustainability}
+                />
+              </div>
+            </div>
+          </aside>
+        </section>
 
 
         {/* COMPLETED IMAGES */}
         {project.completedImages?.length > 0 && (
           <section>
-            <h2 className="text-2xl text-black font-semibold mb-10">Completed Project Gallery</h2>
+            <div className="flex items-end justify-between gap-6">
+              <h2 className="text-2xl text-black font-semibold tracking-tight">Completed Gallery</h2>
+              <p className="text-sm text-gray-700">Click any image to view fullscreen.</p>
+            </div>
             <Swiper
               modules={[Autoplay]}
               autoplay={{ delay: 2500, disableOnInteraction: false }}
@@ -120,16 +156,17 @@ export default function ProjectDetail() {
               {project.completedImages.map((src, index) => (
                 <SwiperSlide key={index}>
                   <div
-  className="relative h-[400px] w-full overflow-hidden rounded-lg shadow-lg cursor-pointer"
-  onClick={() => setFullscreenImage(src)}
->
-  <Image
-    src={src}
-    alt={`Completed ${index + 1}`}
-    fill
-    className="object-cover"
-  />
-</div>
+                    className="relative h-[380px] w-full overflow-hidden rounded-2xl bg-gray-100 shadow-sm cursor-pointer group"
+                    onClick={() => setFullscreenImage(src)}
+                  >
+                    <Image
+                      src={src}
+                      alt={`Completed ${index + 1}`}
+                      fill
+                      className="object-cover transition duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition" />
+                  </div>
 
                 </SwiperSlide>
               ))}
@@ -140,7 +177,10 @@ export default function ProjectDetail() {
         {/* IN-PROGRESS IMAGES */}
         {project.inProgressImages?.length > 0 && (
           <section>
-            <h2 className="text-2xl text-black font-semibold mb-10">In-Progress Gallery</h2>
+            <div className="flex items-end justify-between gap-6">
+              <h2 className="text-2xl text-black font-semibold tracking-tight">In-Progress Gallery</h2>
+              <p className="text-sm text-gray-700">Click any image to view fullscreen.</p>
+            </div>
             <Swiper
               modules={[Autoplay]}
               autoplay={{ delay: 2500, disableOnInteraction: false }}
@@ -152,16 +192,17 @@ export default function ProjectDetail() {
               {project.inProgressImages.map((src, index) => (
                 <SwiperSlide key={index}>
                   <div
-  className="relative h-[400px] w-full overflow-hidden rounded-lg shadow-lg cursor-pointer"
-  onClick={() => setFullscreenImage(src)}
->
-  <Image
-    src={src}
-    alt={`Completed ${index + 1}`}
-    fill
-    className="object-cover"
-  />
-</div>
+                    className="relative h-[380px] w-full overflow-hidden rounded-2xl bg-gray-100 shadow-sm cursor-pointer group"
+                    onClick={() => setFullscreenImage(src)}
+                  >
+                    <Image
+                      src={src}
+                      alt={`In Progress ${index + 1}`}
+                      fill
+                      className="object-cover transition duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition" />
+                  </div>
 
                 </SwiperSlide>
               ))}
@@ -172,61 +213,48 @@ export default function ProjectDetail() {
         {/* VIDEOS */}
         {project.videos?.length > 0 && (
           <section>
-            <h2 className="text-2xl text-black font-semibold mb-10">Project Videos</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <h2 className="text-2xl text-black font-semibold tracking-tight mb-8">Project Videos</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {project.videos.map((video, index) => (
-                <div key={index} className="space-y-3">
-                  <div className="aspect-video w-full bg-black rounded-lg overflow-hidden">
+                <div key={index} className="rounded-2xl border border-gray-200 overflow-hidden bg-white">
+                  <div className="aspect-video w-full bg-black">
                     <video src={video.url} controls className="w-full h-full object-cover" />
                   </div>
-                  <p className="text-sm text-gray-700">{video.caption || "Video"}</p>
+                  <div className="p-4">
+                    <p className="text-sm font-medium text-gray-900">{video.caption || "Video"}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </section>
         )}
-
-        {/* MATERIALS & SUSTAINABILITY */}
-        <section>
-          <h2 className="text-2xl text-black font-semibold mb-6">Materials & Sustainability</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-gray-700">
-            {project.materials?.map((mat, i) => (
-              <p key={i}>{mat}</p>
-            ))}
-            {project.sustainability?.map((sust, i) => (
-              <p key={i}>{sust}</p>
-            ))}
-          </div>
-        </section>
       </main>
       {fullscreenImage && (
-  <div
-    className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
-    onClick={() => setFullscreenImage(null)}
-  >
-    {/* Close button */}
-    <button
-      className="absolute top-6 right-6 text-white text-3xl font-light"
-      onClick={() => setFullscreenImage(null)}
-    >
-      ✕
-    </button>
+        <div
+          className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
+          onClick={() => setFullscreenImage(null)}
+        >
+          <button
+            className="absolute top-6 right-6 text-white text-3xl font-light"
+            onClick={() => setFullscreenImage(null)}
+          >
+            ✕
+          </button>
 
-    {/* Image */}
-    <div
-      className="relative w-full h-full max-w-6xl max-h-[90vh] px-6"
-      onClick={(e) => e.stopPropagation()} // prevents closing when clicking image
-    >
-      <Image
-        src={fullscreenImage}
-        alt="Fullscreen view"
-        fill
-        className="object-contain"
-        priority
-      />
-    </div>
-  </div>
-)}
+          <div
+            className="relative w-full h-full max-w-6xl max-h-[90vh] px-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={fullscreenImage}
+              alt="Fullscreen view"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+        </div>
+      )}
 
 
       <Footer />
@@ -235,10 +263,12 @@ export default function ProjectDetail() {
 }
 
 function Info({ label, value }) {
+  if (value === undefined || value === null || value === "") return null;
+
   return (
-    <div>
-      <p className="uppercase tracking-wide text-black text-xs">{label}</p>
-      <p className="text-gray-800 font-medium">{value}</p>
+    <div className="flex items-start justify-between gap-6">
+      <p className="uppercase tracking-wide text-gray-700 text-xs">{label}</p>
+      <p className="text-gray-900 font-medium text-right break-words">{value}</p>
     </div>
   );
 }

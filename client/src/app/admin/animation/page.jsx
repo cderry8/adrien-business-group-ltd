@@ -26,6 +26,7 @@ const [creating, setCreating] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [newVideo, setNewVideo] = useState(null);
   const [newCover, setNewCover] = useState(null);
+  const [coverPreview, setCoverPreview] = useState(null);
 
   // Fetch all walkthroughs
   const fetchWalkthroughs = async () => {
@@ -141,6 +142,7 @@ const [creating, setCreating] = useState(false);
     setNewProjectName(walk.projectName || "");
     setNewVideo(null);
     setNewCover(null);
+    setCoverPreview(walk.coverImage || null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -160,54 +162,92 @@ const [creating, setCreating] = useState(false);
 
         {/* CREATE WALKTHROUGH */}
         <section className="mb-16 border-b pb-8">
-          <h2 className="text-2xl text-black font-semibold mb-6">Add New Walkthrough</h2>
-          <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-            <div className="flex flex-col">
-              <label htmlFor="projectName" className="mb-1 font-medium text-gray-700">Project Name</label>
+          <div className="rounded-2xl bg-white border border-gray-200 overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-200">
+              <h2 className="text-2xl text-black font-semibold">{editingId ? "Edit Walkthrough" : "Add New Walkthrough"}</h2>
+              <p className="text-sm text-gray-700 mt-1">
+                Upload a walkthrough video and an optional cover image. Limits are shown below.
+              </p>
+            </div>
+
+            <form onSubmit={handleCreate} className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+            <div className="flex flex-col md:col-span-3">
+              <label htmlFor="projectName" className="mb-1 text-sm font-medium text-gray-900">Project Name</label>
               <input
                 id="projectName"
                 type="text"
                 placeholder="Enter project name"
                 value={newProjectName}
                 onChange={(e) => setNewProjectName(e.target.value)}
-                className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-gray-400"
+                className="border border-gray-300 px-4 py-2.5 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-gray-900/20"
               />
             </div>
 
             {/* Video Upload */}
-            <div className="flex flex-col">
-              <label htmlFor="videoUpload" className="mb-1 font-medium text-gray-700">Walkthrough Video</label>
-              <p className="text-xs text-gray-500 mb-1">
-                Max {(LIMITS.maxVideoBytes / (1024 * 1024)).toFixed(0)}MB.
-              </p>
+            <div className="rounded-xl border border-gray-200 p-4 md:col-span-2">
+              <div className="flex items-baseline justify-between gap-4">
+                <h3 className="text-sm font-semibold text-gray-900">Walkthrough Video</h3>
+                <p className="text-xs text-gray-700">Max {(LIMITS.maxVideoBytes / (1024 * 1024)).toFixed(0)}MB</p>
+              </div>
+              <label
+                htmlFor="videoUpload"
+                className="mt-3 flex items-center justify-between rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-4 cursor-pointer hover:bg-gray-100 transition"
+              >
+                <p className="text-sm text-gray-900">Choose video</p>
+                <p className="text-xs text-gray-700 truncate max-w-[180px]">
+                  {newVideo?.name || "MP4, MOV, etc."}
+                </p>
+              </label>
               <input
                 id="videoUpload"
                 type="file"
                 accept="video/*"
                 onChange={(e) => setNewVideo(e.target.files[0])}
-                className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-gray-400"
+                className="hidden"
               />
             </div>
 
             {/* Cover Image Upload */}
-            <div className="flex flex-col">
-              <label htmlFor="coverUpload" className="mb-1 font-medium text-gray-700">Cover Image (Optional)</label>
-              <p className="text-xs text-gray-500 mb-1">
-                Max {(LIMITS.maxCoverBytes / (1024 * 1024)).toFixed(0)}MB.
-              </p>
+            <div className="rounded-xl border border-gray-200 p-4 md:col-span-1">
+              <div className="flex items-baseline justify-between gap-4">
+                <h3 className="text-sm font-semibold text-gray-900">Cover Image</h3>
+                <p className="text-xs text-gray-700">Max {(LIMITS.maxCoverBytes / (1024 * 1024)).toFixed(0)}MB</p>
+              </div>
+
+              <label
+                htmlFor="coverUpload"
+                className="mt-3 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-center cursor-pointer hover:bg-gray-100 transition"
+              >
+                <p className="text-sm font-medium text-gray-900">Choose image (optional)</p>
+                <p className="text-xs text-gray-700 mt-1">PNG, JPG, WEBP</p>
+              </label>
               <input
                 id="coverUpload"
                 type="file"
                 accept="image/*"
-                onChange={(e) => setNewCover(e.target.files[0])}
-                className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-gray-400"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  setNewCover(file);
+                  if (file) setCoverPreview(URL.createObjectURL(file));
+                }}
+                className="hidden"
               />
+
+              {coverPreview && (
+                <div className="mt-3 relative w-full aspect-square rounded-lg overflow-hidden border border-gray-200">
+                  <Image src={coverPreview} alt="Cover preview" fill className="object-cover" />
+                </div>
+              )}
             </div>
-            <div className="col-span-1 md:col-span-3 mt-4 flex justify-center">
+
+            <div className="md:col-span-3 mt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-xs text-gray-700">
+                {editingId ? "Updating will keep existing media if you don’t select new files." : "You can edit this walkthrough later."}
+              </p>
   <button
     type="submit"
     disabled={creating}
-    className={`bg-gray-900 text-white px-6 py-3 rounded text-lg font-medium transition flex items-center gap-2 justify-center ${
+    className={`bg-gray-900 text-white px-6 py-3 rounded-lg text-lg font-medium transition flex items-center gap-2 justify-center ${
       creating ? "opacity-70 cursor-not-allowed" : "hover:bg-gray-800"
     }`}
   >
@@ -239,7 +279,7 @@ const [creating, setCreating] = useState(false);
 
 {creating && uploadProgress !== null && (
   <div className="col-span-1 md:col-span-3 mt-4">
-    <div className="flex justify-between text-xs text-gray-600 mb-1">
+    <div className="flex justify-between text-xs text-gray-700 mb-1">
       <span>Uploading...</span>
       <span>{uploadProgress}%</span>
     </div>
@@ -253,6 +293,7 @@ const [creating, setCreating] = useState(false);
 )}
 
           </form>
+          </div>
         </section>
 
         {/* WALKTHROUGHS GRID */}

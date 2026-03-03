@@ -419,7 +419,7 @@ export default function AdminProjects() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-semibold text-gray-900">Projects</h1>
-              <p className="text-sm text-gray-500 mt-1">Manage all architecture projects</p>
+              <p className="text-sm text-gray-700 mt-1">Manage all architecture projects</p>
             </div>
 
             <button
@@ -582,86 +582,120 @@ export default function AdminProjects() {
 
             {modalOpen && (
                 <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 overflow-auto">
-                    <div className="bg-white rounded-xl shadow-xl max-w-5xl w-full my-10 p-8 relative">
+                    <div className="bg-white rounded-2xl shadow-xl max-w-5xl w-full my-10 relative">
                         <button
                             onClick={() => setModalOpen(false)}
-                            className="absolute top-5 right-5 text-gray-700 hover:text-gray-900"
+                            className="absolute top-5 right-5 text-gray-700 hover:text-gray-900 z-10"
                         >
                             <FiX size={24} />
                         </button>
 
-                        <h2 className="text-2xl font-semibold mb-6 text-black">{editingId ? "Edit Project" : "Create Project"}</h2>
-                        {message && (
-                            <div
-                                className={`mb-4 p-3 rounded ${message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
-                            >
-                                {message.text}
-                            </div>
-                        )}
+                        <div className="px-8 pt-8 pb-6 border-b border-gray-200">
+                          <h2 className="text-2xl font-semibold text-black">{editingId ? "Edit Project" : "Create Project"}</h2>
+                          <p className="text-sm text-gray-700 mt-1">
+                            Fill out details and upload media. Limits are shown under each upload.
+                          </p>
+                        </div>
 
-                        <form className="space-y-6" onSubmit={handleSubmit} encType="multipart/form-data">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="px-8 pb-8 pt-6">
+                          {message && (
+                              <div
+                                  className={`mb-6 p-3 rounded-lg ${message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                              >
+                                  {message.text}
+                              </div>
+                          )}
+
+                          <form className="space-y-8" onSubmit={handleSubmit} encType="multipart/form-data">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-900">Project Name</label>
                                 <input
                                     type="text"
                                     name="name"
-                                    placeholder="Project Name"
+                                    placeholder="e.g. Lakeside Villa"
                                     value={form.name}
                                     onChange={handleInputChange}
-                                    className="border px-4 py-2 rounded text-black w-full"
+                                    className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                                     required
                                 />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-900">Project Type</label>
                                 <input
                                     type="text"
                                     name="type"
-                                    placeholder="Project Type"
+                                    placeholder="e.g. Residential"
                                     value={form.type}
                                     onChange={handleInputChange}
-                                    className="border px-4 py-2 rounded text-black w-full"
+                                    className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                                 />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-900">Location</label>
                                 <input
                                     type="text"
                                     name="location"
-                                    placeholder="Location"
+                                    placeholder="e.g. Washington, DC"
                                     value={form.location}
                                     onChange={handleInputChange}
-                                    className="border px-4 py-2 rounded text-black w-full"
+                                    className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                                     required
                                 />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-900">Year</label>
                                 <input
                                     type="text"
                                     name="year"
-                                    placeholder="Year"
+                                    placeholder="e.g. 2026"
                                     value={form.year}
                                     onChange={handleInputChange}
-                                    className="border px-4 py-2 rounded text-black w-full"
+                                    className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                                 />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-900">Area</label>
                                 <input
                                     type="text"
                                     name="area"
-                                    placeholder="Area"
+                                    placeholder="e.g. 250 m²"
                                     value={form.area}
                                     onChange={handleInputChange}
-                                    className="border px-4 py-2 rounded text-black w-full"
+                                    className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                                 />
+                              </div>
+
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-900">Client</label>
                                 <input
                                     type="text"
                                     name="client"
-                                    placeholder="Client"
+                                    placeholder="e.g. Private"
                                     value={form.client}
                                     onChange={handleInputChange}
-                                    className="border px-4 py-2 rounded text-black w-full"
+                                    className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                                 />
-                                <select
-                                    name="status"
-                                    value={form.status}
-                                    onChange={handleInputChange}
-                                    className="border px-4 py-2 rounded text-black w-full"
-                                >
-                                    <option value="Draft">Draft</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
-                                </select>
                             </div>
+
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-gray-900">Status</label>
+                              <select
+                                  name="status"
+                                  value={form.status}
+                                  onChange={handleInputChange}
+                                  className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                              >
+                                  <option value="Draft">Draft</option>
+                                  <option value="In Progress">In Progress</option>
+                                  <option value="Completed">Completed</option>
+                              </select>
+                            </div>
+                          </div>
 
                             <input
                                 type="text"
@@ -669,7 +703,7 @@ export default function AdminProjects() {
                                 placeholder="Project Style"
                                 value={form.style}
                                 onChange={handleInputChange}
-                                className="border px-4 py-2 rounded text-black w-full"
+                                className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                             />
 
                             <textarea
@@ -677,7 +711,7 @@ export default function AdminProjects() {
                                 placeholder="Project Overview"
                                 value={form.overview}
                                 onChange={handleInputChange}
-                                className="border px-4 py-2 rounded text-black w-full"
+                                className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full min-h-28 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                             />
 
                             <textarea
@@ -685,74 +719,101 @@ export default function AdminProjects() {
                                 placeholder="Design Concept"
                                 value={form.designConcept}
                                 onChange={handleInputChange}
-                                className="border px-4 py-2 rounded text-black w-full"
+                                className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full min-h-28 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                             />
 
-                            <div className="flex gap-2">
-                                <label className="text-black font-medium">Materials</label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-900">Materials</label>
                                 <input
                                     type="text"
                                     placeholder="Add Material"
                                     value={form.materials}
                                     onChange={handleInputChange}
                                     name="materials"
-                                    className="border px-4 py-2 rounded text-black flex-1"
+                                    className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                                 />
                             </div>
 
-                            <div className="flex gap-2">
-                                <label className="text-black font-medium">Sustainability</label>
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-900">Sustainability</label>
                                 <input
                                     type="text"
                                     placeholder="Add Sustainability Info"
                                     value={form.sustainability}
                                     onChange={handleInputChange}
                                     name="sustainability"
-                                    className="border px-4 py-2 rounded text-black flex-1"
+                                    className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                                 />
+                              </div>
                             </div>
 
-                            {form.architects.map((arch, index) => (
-                                <div key={index} className="flex gap-2 items-center mb-2">
+                            <div className="rounded-xl border border-gray-200 p-4">
+                              <div className="flex items-center justify-between gap-4">
+                                <div>
+                                  <h3 className="text-sm font-semibold text-gray-900">Architects</h3>
+                                  <p className="text-xs text-gray-700">Add one or more architect names.</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={addArchitectField}
+                                    className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
+                                >
+                                    Add Architect
+                                </button>
+                              </div>
+
+                              <div className="mt-4 space-y-3">
+                              {form.architects.map((arch, index) => (
+                                <div key={index} className="flex gap-2 items-center">
                                     <input
                                         type="text"
                                         name={`architects[${index}]`}
                                         placeholder="Architect Name"
                                         value={arch.name}
                                         onChange={(e) => handleArchitectChange(index, "name", e.target.value)}
-                                        className="border px-2 py-1 rounded text-black"
+                                        className="border border-gray-300 px-3 py-2 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => removeArchitectField(index)}
-                                        className="text-red-500 px-2"
+                                        className="text-red-600 hover:text-red-700 px-2"
                                     >
                                         <FiX />
                                     </button>
                                 </div>
                             ))}
+                              </div>
+                            </div>
 
-                            <button
-                                type="button"
-                                onClick={addArchitectField}
-                                className="bg-gray-900 text-white px-4 py-2 rounded mt-2"
-                            >
-                                Add Architect
-                            </button>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                              <div className="rounded-xl border border-gray-200 p-4">
+                                <div className="flex items-start justify-between gap-4">
+                                  <div>
+                                    <h3 className="text-sm font-semibold text-gray-900">Main Image</h3>
+                                    <p className="text-xs text-gray-700 mt-1">
+                                      Max {LIMITS.maxMainImageCount} image, up to {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB.
+                                    </p>
+                                  </div>
+                                </div>
 
-                            <label className="block mb-2 font-medium">Main Image</label>
-                            <p className="text-xs text-gray-500 mb-2">
-                                Max {LIMITS.maxMainImageCount} image, up to {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB.
-                            </p>
-
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleMainImageChange}
-                            />
+                                <label
+                                  htmlFor="project-main-image"
+                                  className="mt-4 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-8 text-center cursor-pointer hover:bg-gray-100 transition"
+                                >
+                                  <p className="text-sm font-medium text-gray-900">Click to choose an image</p>
+                                  <p className="text-xs text-gray-700 mt-1">PNG, JPG, WEBP</p>
+                                </label>
+                                <input
+                                  id="project-main-image"
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={handleMainImageChange}
+                                  className="hidden"
+                                />
 
                             {mainImagePreview && (
-                                <div className="mt-2 relative w-40 h-40">
+                                <div className="mt-4 relative w-full aspect-square max-w-[220px]">
                                     <Image
                                         src={mainImagePreview}
                                         alt="Main preview"
@@ -765,110 +826,157 @@ export default function AdminProjects() {
                                             setForm((prev) => ({ ...prev, mainImage: null }));
                                             setMainImagePreview(null);
                                         }}
-                                        className="absolute top-1 right-1 bg-black/60 text-white p-1 rounded"
+                                        className="absolute top-2 right-2 bg-black/70 text-white p-1.5 rounded-full"
                                     >
                                         <FiX />
                                     </button>
                                 </div>
                             )}
+                              </div>
 
-                            <div>
-                                <label className="text-black font-medium">Completed Images</label>
-                                <p className="text-xs text-gray-500 mb-2">
-                                    Max {LIMITS.maxCompletedImagesCount} images, up to {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB each.
-                                </p>
-                                <input
-                                    type="file"
-                                    name="completedImages"
-                                    multiple
-                                    accept="image/*"
-                                    onChange={(e) => handleImageChange(e, "completedImages")}
-                                    className="mt-2 text-black cursor-pointer"
-                                />
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                    {imagePreviews.completedImages.map((src, idx) => (
-                                        <div key={idx} className="relative w-24 h-24 rounded overflow-hidden border">
-                                            <Image src={src} alt="Preview" fill className="object-cover" />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeImage("completedImages", idx)}
-                                                className="absolute top-1 right-1 text-red-500 bg-white rounded-full p-1"
-                                            >
-                                                <FiX size={16} />
-                                            </button>
-                                        </div>
-                                    ))}
+                              <div className="rounded-xl border border-gray-200 p-4">
+                                <h3 className="text-sm font-semibold text-gray-900">Project Media</h3>
+                                <p className="text-xs text-gray-700 mt-1">Upload completed / in-progress images and videos.</p>
+
+                                <div className="mt-4 space-y-6">
+                                  <div>
+                                    <div className="flex items-baseline justify-between gap-4">
+                                      <label className="text-sm font-medium text-gray-900">Completed Images</label>
+                                      <p className="text-xs text-gray-700">
+                                        Max {LIMITS.maxCompletedImagesCount}, {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB each
+                                      </p>
+                                    </div>
+                                    <label
+                                      htmlFor="project-completed-images"
+                                      className="mt-2 flex items-center justify-between rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-4 cursor-pointer hover:bg-gray-100 transition"
+                                    >
+                                      <p className="text-sm text-gray-900">Choose images</p>
+                                      <p className="text-xs text-gray-700">Multiple</p>
+                                    </label>
+                                    <input
+                                      id="project-completed-images"
+                                      type="file"
+                                      name="completedImages"
+                                      multiple
+                                      accept="image/*"
+                                      onChange={(e) => handleImageChange(e, "completedImages")}
+                                      className="hidden"
+                                    />
+
+                                    <div className="flex flex-wrap gap-2 mt-3">
+                                        {imagePreviews.completedImages.map((src, idx) => (
+                                            <div key={idx} className="relative w-24 h-24 rounded-lg overflow-hidden border border-gray-200">
+                                                <Image src={src} alt="Preview" fill className="object-cover" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeImage("completedImages", idx)}
+                                                    className="absolute top-1 right-1 text-red-600 bg-white/90 rounded-full p-1"
+                                                >
+                                                    <FiX size={16} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                  </div>
+
+                                  <div>
+                                    <div className="flex items-baseline justify-between gap-4">
+                                      <label className="text-sm font-medium text-gray-900">In Progress Images</label>
+                                      <p className="text-xs text-gray-700">
+                                        Max {LIMITS.maxInProgressImagesCount}, {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB each
+                                      </p>
+                                    </div>
+                                    <label
+                                      htmlFor="project-inprogress-images"
+                                      className="mt-2 flex items-center justify-between rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-4 cursor-pointer hover:bg-gray-100 transition"
+                                    >
+                                      <p className="text-sm text-gray-900">Choose images</p>
+                                      <p className="text-xs text-gray-700">Multiple</p>
+                                    </label>
+                                    <input
+                                      id="project-inprogress-images"
+                                      type="file"
+                                      name="inProgressImages"
+                                      multiple
+                                      accept="image/*"
+                                      onChange={(e) => handleImageChange(e, "inProgressImages")}
+                                      className="hidden"
+                                    />
+
+                                    <div className="flex flex-wrap gap-2 mt-3">
+                                        {imagePreviews.inProgressImages.map((src, idx) => (
+                                            <div key={idx} className="relative w-24 h-24 rounded-lg overflow-hidden border border-gray-200">
+                                                <Image src={src} alt="Preview" fill className="object-cover" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeImage("inProgressImages", idx)}
+                                                    className="absolute top-1 right-1 text-red-600 bg-white/90 rounded-full p-1"
+                                                >
+                                                    <FiX size={16} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                  </div>
+
+                                  <div>
+                                    <div className="flex items-baseline justify-between gap-4">
+                                      <label className="text-sm font-medium text-gray-900">Videos</label>
+                                      <p className="text-xs text-gray-700">
+                                        Max {LIMITS.maxVideosCount}, {(LIMITS.maxVideoBytes / (1024 * 1024)).toFixed(0)}MB each
+                                      </p>
+                                    </div>
+                                    <label
+                                      htmlFor="project-videos"
+                                      className="mt-2 flex items-center justify-between rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-4 cursor-pointer hover:bg-gray-100 transition"
+                                    >
+                                      <p className="text-sm text-gray-900">Choose videos</p>
+                                      <p className="text-xs text-gray-700">Multiple</p>
+                                    </label>
+                                    <input
+                                      id="project-videos"
+                                      type="file"
+                                      name="videos"
+                                      multiple
+                                      accept="video/*"
+                                      onChange={handleVideoChange}
+                                      className="hidden"
+                                    />
+
+                                    <div className="flex flex-wrap gap-2 mt-3">
+                                        {videoPreviews.map((src, idx) => (
+                                            <div key={idx} className="relative w-32 h-24 border border-gray-200 rounded-lg overflow-hidden">
+                                                <video src={src} controls className="w-full h-full object-cover" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeVideo(idx)}
+                                                    className="absolute top-1 right-1 text-red-600 bg-white/90 rounded-full p-1"
+                                                >
+                                                    <FiX size={16} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                  </div>
                                 </div>
+                              </div>
                             </div>
 
-                            <div>
-                                <label className="text-black font-medium">In Progress Images</label>
-                                <p className="text-xs text-gray-500 mb-2">
-                                    Max {LIMITS.maxInProgressImagesCount} images, up to {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB each.
-                                </p>
-                                <input
-                                    type="file"
-                                    name="inProgressImages"
-                                    multiple
-                                    accept="image/*"
-                                    onChange={(e) => handleImageChange(e, "inProgressImages")}
-                                    className="mt-2 text-black cursor-pointer"
-                                />
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                    {imagePreviews.inProgressImages.map((src, idx) => (
-                                        <div key={idx} className="relative w-24 h-24 rounded overflow-hidden border">
-                                            <Image src={src} alt="Preview" fill className="object-cover" />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeImage("inProgressImages", idx)}
-                                                className="absolute top-1 right-1 text-red-500 bg-white rounded-full p-1"
-                                            >
-                                                <FiX size={16} />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
+                              <div className="text-xs text-gray-700">
+                                {editingId ? "Updating will keep existing media if you don’t select new files." : "You can edit this project later from the list."}
+                              </div>
+                              <button
+                                  type="submit"
+                                  className="bg-gray-900 cursor-pointer text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+                              >
+                                  {loading ? "Saving..." : editingId ? "Update Project" : "Create Project"}
+                              </button>
                             </div>
-
-                            <div>
-                                <label className="text-black font-medium">Videos</label>
-                                <p className="text-xs text-gray-500 mb-2">
-                                    Max {LIMITS.maxVideosCount} videos, up to {(LIMITS.maxVideoBytes / (1024 * 1024)).toFixed(0)}MB each.
-                                </p>
-                                <input
-                                    type="file"
-                                    name="videos"
-                                    multiple
-                                    accept="video/*"
-                                    onChange={handleVideoChange}
-                                    className="mt-2"
-                                />
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                    {videoPreviews.map((src, idx) => (
-                                        <div key={idx} className="relative w-32 h-24 border rounded overflow-hidden">
-                                            <video src={src} controls className="w-full h-full object-cover" />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeVideo(idx)}
-                                                className="absolute top-1 right-1 text-red-500 bg-white rounded-full p-1"
-                                            >
-                                                <FiX size={16} />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className="bg-gray-900 cursor-pointer text-white px-6 py-3 rounded hover:bg-gray-800 transition"
-                            >
-                                {loading ? "Saving..." : editingId ? "Update Project" : "Create Project"}
-                            </button>
 
                             {loading && uploadProgress !== null && (
                               <div className="mt-4">
-                                <div className="flex justify-between text-xs text-gray-600 mb-1">
+                                <div className="flex justify-between text-xs text-gray-700 mb-1">
                                   <span>Uploading...</span>
                                   <span>{uploadProgress}%</span>
                                 </div>
@@ -880,7 +988,8 @@ export default function AdminProjects() {
                                 </div>
                               </div>
                             )}
-                        </form>
+                          </form>
+                        </div>
                     </div>
                 </div>
             )}

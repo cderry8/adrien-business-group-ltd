@@ -356,97 +356,250 @@ export default function AdminNews() {
       {/* MODAL */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 overflow-auto">
-          <div className="bg-white rounded-xl shadow-xl max-w-5xl w-full my-10 p-8 relative">
-            <button onClick={() => setModalOpen(false)} className="absolute top-5 right-5 text-gray-700 hover:text-gray-900">
+          <div className="bg-white rounded-2xl shadow-xl max-w-5xl w-full my-10 relative">
+            <button onClick={() => setModalOpen(false)} className="absolute top-5 right-5 text-gray-700 hover:text-gray-900 z-10">
               <FiX size={24} />
             </button>
 
-            <h2 className="text-2xl font-semibold mb-6 text-black">{editingId ? "Edit News" : "Create News"}</h2>
-            {message && (
-              <div className={`mb-4 p-3 rounded ${message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                {message.text}
-              </div>
-            )}
+            <div className="px-8 pt-8 pb-6 border-b border-gray-200">
+              <h2 className="text-2xl font-semibold text-black">{editingId ? "Edit News" : "Create News"}</h2>
+              <p className="text-sm text-gray-700 mt-1">
+                Add the article details and upload media. Limits are shown under each upload.
+              </p>
+            </div>
 
-            <form className="space-y-6" onSubmit={handleSubmit} encType="multipart/form-data">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <input type="text" name="title" placeholder="Title" value={form.title} onChange={handleInputChange} className="border px-4 py-2 rounded text-black w-full" required />
-                <input type="date" name="date" value={form.date} onChange={handleInputChange} className="border px-4 py-2 rounded text-black w-full" required />
-                <input type="text" name="author" placeholder="Author" value={form.author} onChange={handleInputChange} className="border px-4 py-2 rounded text-black w-full" required />
-              </div>
+            <div className="px-8 pb-8 pt-6">
+              {message && (
+                <div className={`mb-6 p-3 rounded-lg ${message.type === "success" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                  {message.text}
+                </div>
+              )}
 
-              <textarea name="shortDescription" placeholder="Short Description" value={form.shortDescription} onChange={handleInputChange} className="border px-4 py-2 rounded text-black w-full" />
+              <form className="space-y-8" onSubmit={handleSubmit} encType="multipart/form-data">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-900">Title</label>
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="e.g. New Project Launch"
+                      value={form.title}
+                      onChange={handleInputChange}
+                      className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                      required
+                    />
+                  </div>
 
-              {/* Content paragraphs */}
-              <div>
-                <label className="font-medium text-black">Content</label>
-                {form.content.map((para, idx) => (
-                  <div key={idx} className="flex gap-2 mt-2">
-                    <textarea value={para} onChange={(e) => handleContentChange(idx, e.target.value)} className="border px-4 py-2 rounded text-black flex-1" rows={3} />
-                    <button type="button" onClick={() => removeContentParagraph(idx)} className="text-red-500 p-2">
-                      <FiX />
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-900">Date</label>
+                    <input
+                      type="date"
+                      name="date"
+                      value={form.date}
+                      onChange={handleInputChange}
+                      className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-sm font-medium text-gray-900">Author</label>
+                    <input
+                      type="text"
+                      name="author"
+                      placeholder="e.g. Adrien"
+                      value={form.author}
+                      onChange={handleInputChange}
+                      className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-900">Short Description</label>
+                  <textarea
+                    name="shortDescription"
+                    placeholder="A short summary shown on the news list"
+                    value={form.shortDescription}
+                    onChange={handleInputChange}
+                    className="border border-gray-300 px-4 py-2.5 rounded-lg text-black w-full min-h-24 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                  />
+                </div>
+
+                {/* Content paragraphs */}
+                <div className="rounded-xl border border-gray-200 p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-900">Content</h3>
+                      <p className="text-xs text-gray-700">Add one or more paragraphs.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addContentParagraph}
+                      className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
+                    >
+                      Add Paragraph
                     </button>
                   </div>
-                ))}
-                <button type="button" onClick={addContentParagraph} className="bg-gray-900 text-white px-4 py-2 rounded mt-2">Add Paragraph</button>
-              </div>
 
-              {/* Featured Image */}
-              <div>
-                <label className="font-medium text-black">Featured Image</label>
-                <p className="text-xs text-gray-500 mb-2">
-                  Max {LIMITS.maxFeaturedImageCount} image, up to {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB.
-                </p>
-                <input type="file" accept="image/*" onChange={handleFeaturedImage} />
-                {imagePreviews.featuredImage && (
-                  <div className="mt-2 relative w-40 h-40">
-                    <Image src={imagePreviews.featuredImage} alt="Featured" fill className="object-cover rounded" />
-                    <button type="button" onClick={() => { setForm(prev => ({ ...prev, featuredImage: null })); setImagePreviews(prev => ({ ...prev, featuredImage: null })); }} className="absolute top-1 right-1 bg-black/60 text-white p-1 rounded"><FiX /></button>
+                  <div className="mt-4 space-y-3">
+                    {form.content.map((para, idx) => (
+                      <div key={idx} className="flex gap-2">
+                        <textarea
+                          value={para}
+                          onChange={(e) => handleContentChange(idx, e.target.value)}
+                          className="border border-gray-300 px-4 py-2.5 rounded-lg text-black flex-1 min-h-24 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                          rows={3}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeContentParagraph(idx)}
+                          className="text-red-600 hover:text-red-700 px-2"
+                          title="Remove paragraph"
+                        >
+                          <FiX />
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
-
-              {/* Gallery Images */}
-              <div>
-                <label className="font-medium text-black">Gallery Images</label>
-                <p className="text-xs text-gray-500 mb-2">
-                  Max {LIMITS.maxGalleryImagesCount} images, up to {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB each.
-                </p>
-                <input type="file" multiple accept="image/*" onChange={handleGalleryImages} />
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {imagePreviews.galleryImages.map((src, idx) => (
-                    <div key={idx} className="relative w-24 h-24 rounded overflow-hidden border">
-                      <Image src={src} alt="Gallery" fill className="object-cover" />
-                      <button type="button" onClick={() => removeGalleryImage(idx)} className="absolute top-1 right-1 text-red-500 bg-white rounded-full p-1"><FiX size={16} /></button>
-                    </div>
-                  ))}
                 </div>
-              </div>
 
-              {/* Videos */}
-              <div>
-                <label className="font-medium text-black">Videos</label>
-                <p className="text-xs text-gray-500 mb-2">
-                  Max {LIMITS.maxVideosCount} videos, up to {(LIMITS.maxVideoBytes / (1024 * 1024)).toFixed(0)}MB each.
-                </p>
-                <input type="file" multiple accept="video/*" onChange={handleVideos} />
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {videoPreviews.map((src, idx) => (
-                    <div key={idx} className="relative w-32 h-24 border rounded overflow-hidden">
-                      <video src={src} controls className="w-full h-full object-cover" />
-                      <button type="button" onClick={() => removeVideo(idx)} className="absolute top-1 right-1 text-red-500 bg-white rounded-full p-1"><FiX size={16} /></button>
+                {/* Featured Image */}
+                <div className="rounded-xl border border-gray-200 p-4">
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900">Featured Image</h3>
+                    <p className="text-xs text-gray-700 mt-1">
+                      Max {LIMITS.maxFeaturedImageCount} image, up to {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB.
+                    </p>
+                  </div>
+
+                  <label
+                    htmlFor="news-featured-image"
+                    className="mt-4 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-8 text-center cursor-pointer hover:bg-gray-100 transition"
+                  >
+                    <p className="text-sm font-medium text-gray-900">Click to choose an image</p>
+                    <p className="text-xs text-gray-700 mt-1">PNG, JPG, WEBP</p>
+                  </label>
+                  <input
+                    id="news-featured-image"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFeaturedImage}
+                    className="hidden"
+                  />
+
+                  {imagePreviews.featuredImage && (
+                    <div className="mt-4 relative w-full aspect-square max-w-[220px]">
+                      <Image src={imagePreviews.featuredImage} alt="Featured" fill className="object-cover rounded" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setForm((prev) => ({ ...prev, featuredImage: null }));
+                          setImagePreviews((prev) => ({ ...prev, featuredImage: null }));
+                        }}
+                        className="absolute top-2 right-2 bg-black/70 text-white p-1.5 rounded-full"
+                      >
+                        <FiX />
+                      </button>
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
 
-              <button type="submit" className="bg-gray-900 text-white px-6 py-3 rounded hover:bg-gray-800 transition">
-                {loading ? "Saving..." : editingId ? "Update News" : "Create News"}
-              </button>
+                {/* Gallery Images */}
+                <div className="rounded-xl border border-gray-200 p-4">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <h3 className="text-sm font-semibold text-gray-900">Gallery Images</h3>
+                    <p className="text-xs text-gray-700">
+                      Max {LIMITS.maxGalleryImagesCount}, {(LIMITS.maxImageBytes / (1024 * 1024)).toFixed(0)}MB each
+                    </p>
+                  </div>
+
+                  <label
+                    htmlFor="news-gallery-images"
+                    className="mt-4 flex items-center justify-between rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-4 cursor-pointer hover:bg-gray-100 transition"
+                  >
+                    <p className="text-sm text-gray-900">Choose images</p>
+                    <p className="text-xs text-gray-700">Multiple</p>
+                  </label>
+                  <input
+                    id="news-gallery-images"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleGalleryImages}
+                    className="hidden"
+                  />
+
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {imagePreviews.galleryImages.map((src, idx) => (
+                      <div key={idx} className="relative w-24 h-24 rounded-lg overflow-hidden border border-gray-200">
+                        <Image src={src} alt="Gallery" fill className="object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => removeGalleryImage(idx)}
+                          className="absolute top-1 right-1 text-red-600 bg-white/90 rounded-full p-1"
+                        >
+                          <FiX size={16} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Videos */}
+                <div className="rounded-xl border border-gray-200 p-4">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <h3 className="text-sm font-semibold text-gray-900">Videos</h3>
+                    <p className="text-xs text-gray-700">
+                      Max {LIMITS.maxVideosCount}, {(LIMITS.maxVideoBytes / (1024 * 1024)).toFixed(0)}MB each
+                    </p>
+                  </div>
+
+                  <label
+                    htmlFor="news-videos"
+                    className="mt-4 flex items-center justify-between rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-4 cursor-pointer hover:bg-gray-100 transition"
+                  >
+                    <p className="text-sm text-gray-900">Choose videos</p>
+                    <p className="text-xs text-gray-700">Multiple</p>
+                  </label>
+                  <input
+                    id="news-videos"
+                    type="file"
+                    multiple
+                    accept="video/*"
+                    onChange={handleVideos}
+                    className="hidden"
+                  />
+
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {videoPreviews.map((src, idx) => (
+                      <div key={idx} className="relative w-32 h-24 border border-gray-200 rounded-lg overflow-hidden">
+                        <video src={src} controls className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => removeVideo(idx)}
+                          className="absolute top-1 right-1 text-red-600 bg-white/90 rounded-full p-1"
+                        >
+                          <FiX size={16} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
+                  <div className="text-xs text-gray-700">
+                    {editingId ? "Updating will keep existing media if you don’t select new files." : "You can edit this article later from the list."}
+                  </div>
+                  <button type="submit" className="bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">
+                    {loading ? "Saving..." : editingId ? "Update News" : "Create News"}
+                  </button>
+                </div>
 
               {loading && uploadProgress !== null && (
                 <div className="mt-4">
-                  <div className="flex justify-between text-xs text-gray-600 mb-1">
+                  <div className="flex justify-between text-xs text-gray-700 mb-1">
                     <span>Uploading...</span>
                     <span>{uploadProgress}%</span>
                   </div>
@@ -458,7 +611,8 @@ export default function AdminNews() {
                   </div>
                 </div>
               )}
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       )}

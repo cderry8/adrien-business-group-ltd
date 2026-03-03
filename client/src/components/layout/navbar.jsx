@@ -45,7 +45,7 @@ export default function Navbar() {
               />
             </div>
 
-            <span className="hidden sm:block text-[18px] font-bold text-[#7a7a7a] tracking-[0.02em] group-hover:text-[#5f5f5f] transition">
+            <span className="hidden sm:block text-[18px] font-bold text-gray-800 tracking-[0.02em] group-hover:text-black transition">
               ADRIEN BUSINESS GROUP
             </span>
           </Link>
@@ -61,7 +61,7 @@ export default function Navbar() {
           {/* MOBILE MENU BUTTON */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="ml-auto md:hidden text-2xl text-[#6f6f6f] hover:text-[#4f4f4f]"
+            className="ml-auto md:hidden text-2xl text-gray-700 hover:text-gray-900"
           >
             {isMobileMenuOpen ? <FiX /> : <FiMenu />}
           </button>
@@ -90,7 +90,7 @@ function NavLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="text-[14px] font-normal tracking-[0.14em] text-[#6f6f6f] hover:text-[#4f4f4f] transition"
+      className="text-[14px] font-normal tracking-[0.14em] text-gray-700 hover:text-gray-900 transition"
     >
       {children}
     </Link>
