@@ -69,25 +69,11 @@ export default function FeaturedProjects() {
                 </div>
 
                 {/* Text */}
-                <div className="flex flex-col justify-center text-center lg:text-left">
-                  <span className="mb-6 text-sm tracking-widest uppercase text-gray-700">
-                    {project.location || "Unknown"}
-                  </span>
-
-                  <h3 className="mb-10 text-3xl md:text-4xl font-light tracking-wide text-black">
-                    {project.name || project.title}
-                  </h3>
-
-                  <p className="mb-12 text-sm text-gray-700">
-                    {project.overview || project.subtitle || ""}
-                  </p>
-
-                  <button
-                    onClick={() => handleViewProject(project._id)}
-                    className="w-fit px-5 py-2 text-sm border cursor-pointer border-gray-900 text-black hover:bg-gray-900 hover:text-white transition mx-auto lg:mx-0"
-                  >
-                    View Project
-                  </button>
+                <div className="flex flex-col justify-center text-center lg:text-left px-2 sm:px-4 lg:px-0">
+                  <span className="mb-4 sm:mb-6 text-xs sm:text-sm tracking-widest uppercase text-gray-600"> {project.location || "Unknown"} </span>
+                  <h3 className="mb-6 sm:mb-8 text-2xl sm:text-3xl md:text-4xl font-light tracking-wide text-black leading-snug"> {project.name || project.title} </h3>
+                  <p className=" mb-8 sm:mb-10 text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed max-w-prose mx-auto lg:mx-0 "> {project.overview || project.subtitle || ""} </p>
+                  <button onClick={() => handleViewProject(project._id)} className="w-fit px-5 py-2 text-sm border cursor-pointer border-gray-900 text-black hover:bg-gray-900 hover:text-white transition mx-auto lg:mx-0" > View Project </button>
                 </div>
               </div>
             ))}
