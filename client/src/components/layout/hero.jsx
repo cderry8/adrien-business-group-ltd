@@ -5,7 +5,7 @@ export default function HeroVideo() {
       {/* FIXED Background video */}
       <video
         className="fixed inset-0 h-full w-full object-cover -z-10"
-        src="https://adrienpullzonebyderry.b-cdn.net/F%20de%20charite%20masterplan%20video%20final_3.mp4"
+        src="https://adrienvideo.b-cdn.net/Adobe%20Express%20-%20F%20de%20charite%20masterplan%20video%20final.mp4"
         autoPlay
         loop
         muted
